@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+allprojects {
+    group = 'vk.vkPets'
+    version = '0.0.1'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'idea'
+
+    dependencies {
+        compileOnly 'org.jetbrains:annotations:19.0.0'
+        testCompileOnly 'org.jetbrains:annotations:19.0.0'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+}

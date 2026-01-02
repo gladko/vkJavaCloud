@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: hello-service
+server:
+  port: 18000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true

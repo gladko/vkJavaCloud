@@ -1,0 +1,5 @@
+
+
+dependencies {
+    implementation 'io.etcd:jetcd-core:0.5.8'
+}

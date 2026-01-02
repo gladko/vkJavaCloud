@@ -1,0 +1,27 @@
+
+services:
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+
+  hello-service:
+    image: hello-service
+    ports:
+      - "18000:18000"
+    depends_on:
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_URL=http://eureka-server:8761/eureka
+
+  foo-service:
+    image: foo-service
+    ports:
+      - "18100:18100"
+    depends_on:
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_URL=http://eureka-server:8761/eureka

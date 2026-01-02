@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: foo-service
+server:
+  port: 18300

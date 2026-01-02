@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: foo-service
+server:
+  port: 18100
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true

@@ -1,0 +1,10 @@
+dependencies {
+//    implementation "org.apache.curator:curator-framework:5.8.0"
+    api "org.apache.curator:curator-recipes:5.8.0"
+    api "org.apache.curator:curator-x-discovery:5.8.0"
+//    implementation "com.fasterxml.jackson.core:jackson-databind:2.18.4"
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    implementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+}
