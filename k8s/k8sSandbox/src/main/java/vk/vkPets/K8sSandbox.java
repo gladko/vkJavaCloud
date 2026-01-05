@@ -9,7 +9,7 @@ import io.kubernetes.client.util.ClientBuilder;
 
 import java.io.IOException;
 
-public class Main {
+public class K8sSandbox {
     public static void main(String[] args) throws IOException, ApiException {
         // Initialize API client
         ApiClient client = ClientBuilder.standard().build();
