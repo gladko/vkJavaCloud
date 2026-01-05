@@ -1,0 +1,5 @@
+
+dependencies {
+    api "com.netflix.eureka:eureka-client:2.0.2"
+    api "com.netflix.eureka:eureka-client-jersey3:2.0.2"
+}

@@ -8,6 +8,10 @@ services:
 
   hello-service:
     image: hello-service
+    deploy:         # works only in swarm mode (docker stack deploy).
+      replicas: 3
+      restart_policy:
+        condition: on-failure
     ports:
       - "18000:18000"
     depends_on:
