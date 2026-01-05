@@ -1,0 +1,25 @@
+services:
+  zoo:
+    image: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+      - "2180:8080"
+
+  hello-service:
+    image: hello-service
+    deploy: # works only in swarm mode (docker stack deploy).
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "18000:18000"
+    environment:
+      - SPRING_CLOUD_ZOOKEEPER_CONNECT-STRING=zoo:2181
+
+  foo-service:
+    image: foo-service
+    ports:
+      - "18100:18100"
+    environment:
+      - SPRING_CLOUD_ZOOKEEPER_CONNECT-STRING=zoo:2181

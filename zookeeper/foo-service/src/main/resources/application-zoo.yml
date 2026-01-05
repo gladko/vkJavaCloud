@@ -1,9 +1,9 @@
 
-spring:
-  cloud:
-    zookeeper:
-      connect-string: localhost:2181  # Change this to your ZooKeeper connection string
-      discovery:
-        enabled: true
-        register: true
+#spring:
+#  cloud:
+#    zookeeper:
+#      connect-string: localhost:2181  # Change this to your ZooKeeper connection string
+#      discovery:
+#        enabled: true
+#        register: true
 #        root: /your-app-root
