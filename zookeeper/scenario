@@ -1,0 +1,13 @@
+##################################################################
+# ZK  scenario
+##################################################################
+
+# ZK
+# ~/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+
+# Hello-services
+java -Dserver.port=18001 -jar zookeeper/hello-service/build/libs/hello-service-0.0.1.jar
+java -Dserver.port=18002 -jar zookeeper/hello-service/build/libs/hello-service-0.0.1.jar
+
+# Foo-services
+java -jar zookeeper/bar-service/build/libs/bar-service-0.0.1.jar

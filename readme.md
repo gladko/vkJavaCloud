@@ -1,10 +1,13 @@
+in WSL go to `/mnt/c/Users/vkozak/workspace/projects/vkPets/vkJavaCloud`
 
 
-
-
-bar-service    18200
-
-
+## remove docker images
+ 
+```bash
+docker rmi -f eureka-server
+docker rmi -f hello-service
+docker rmi -f foo-service
+```
 
 
 ## docker compose how-to
@@ -12,13 +15,21 @@ bar-service    18200
 docker compose up
 ```
 
-# Start zookeeper
-```bash
-~/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
-```
 
 ## k3s how-to
 ```
 kubectl apply -f deployment.yaml
 kubectl get deployments
+```
+
+## Kill all vkPets
+
+```bash
+kill -9 $(ps -ef | grep vk.vkPets | awk '{print $2}')
+```
+
+```powershel
+jcmd | Select-String "vk.vkPets" | ForEach-Object {
+    kill ($_ -split '\s+')[0]
+}
 ```

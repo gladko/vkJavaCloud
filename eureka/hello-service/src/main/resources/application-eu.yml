@@ -1,0 +1,7 @@
+# Eureka profile: Attempt to use single project for both eureka and ZK registries
+# Does not work yet
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true

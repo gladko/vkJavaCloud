@@ -1,3 +1,12 @@
+## Start zookeeper
+```bash
+~/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+```
+
+
+
+
+## Expiration
 default values (2000ms tickTime, iniLimit = 10 and syncLimit = 5)
 
 Zookeeper server exposes minSessionTimeout and maxSessionTimeout configurations (in milliseconds) in zoo.cfg. 

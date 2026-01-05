@@ -1,8 +1,20 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    plugins {
+        id 'org.springframework.boot' version '3.3.0'
+        id 'com.bmuschko.docker-remote-api' version '9.4.0'
+    }
+}
+
 include 'consul:vkConsul'
 include 'etcd:vkEtcd'
 include 'eureka:eureka-server'
 include 'eureka:foo-service'
 include 'eureka:hello-service'
 include 'k8s:vkK8s'
-include 'zookeeper:bar-service'
+include 'zookeeper:foo-service'
 include 'zookeeper:vkZookeeper'
+include 'zookeeper:hello-service'

@@ -1,0 +1,52 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+//plugins {
+//    id 'com.bmuschko.docker-remote-api' version '9.4.0'
+//}
+
+
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+tasks.register('buildDockerImage-XXX',  DockerBuildImage) {
+    dependsOn build       // make sure the JAR exists
+    inputDir = project.projectDir
+    images.add("${project.name}:latest")
+}
+
+
+
+//import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+//import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+//import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+
+//docker {
+//    registryCredentials {
+//        url      = 'https://index.docker.io/v1/'
+//        username = System.getenv('DOCKER_USERNAME')
+//        password = System.getenv('DOCKER_PASSWORD')
+//    }
+//}
+
+
+
+//task buildDockerImage(type: DockerBuildImage) {
+//    dependsOn build       // make sure the JAR exists
+//    inputDir = project.projectDir
+//    images.add("${System.getenv('DOCKER_USERNAME')}/sample-image:latest")
+//}
+
+//task pushDockerImage(type: DockerPushImage) {
+//    dependsOn buildDockerImage
+//    images.add("${System.getenv('DOCKER_USERNAME')}/sample-image:latest")
+//}
+
+//task createDockerContainer(type: DockerCreateContainer) {
+//    dependsOn pushDockerImage
+//    image = "${System.getenv('DOCKER_USERNAME')}/sample-image:latest"
+//    portBindings = ['8080:8080']
+//}
+
+//task startDockerContainer(type: DockerStartContainer) {
+//    dependsOn createDockerContainer
+//    targetContainerId { createDockerContainer.getContainerId() }
+//}

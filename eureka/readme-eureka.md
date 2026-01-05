@@ -1,5 +1,5 @@
 ## APPs
-- hello-service:  trivial spring boot app. Can register itself with netflix-eureka.
+- hello-service:  trivial spring boot app. Can register itself with ServiceRegistry.
 - foo-service: a client app that uses different APIs for hello-service discovery
 
 
@@ -16,10 +16,13 @@ java -Dserver.port=18002 -Deureka.client.serviceUrl.defaultZone="http://172.18.0
 
 ## docker how-to
 1. in WSL go to `/mnt/c/Users/vkozak/workspace/projects/vkPets/vkJavaCloud/eureka/hello-service`
-2. exec hello-service
+2. build hello-service
 ```bash
 ../../gradlew build
 docker build -t hello-service .
+```
+3. run hello-service
+```bash
 docker run -d -p 8001:18000 hello-service
 docker run -d -p 8002:18000 hello-service
 
@@ -32,7 +35,8 @@ docker build -t eureka-server .
 docker run -d -p 8761:8761 --name eureka-server eureka-server
 
 
-## Eureka client
+
+## Eureka client under the hood
 Data is holt in `com.netflix.discovery.shared.Application.instancesMap` and `Applications->virtualHostNameAppMap`
 Data is refreshed in `com.netflix.discovery.DiscoveryClient.updateDelta` method
 ```java

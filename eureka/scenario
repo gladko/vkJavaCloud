@@ -1,0 +1,14 @@
+##################################################################
+# EUREKA  scenario
+##################################################################
+
+# Eureka server
+java -jar eureka/eureka-server/build/libs/eureka-server-0.0.1.jar
+
+# Hello-services
+# EUREKA_OPT=-Deureka.client.serviceUrl.defaultZone="http://172.18.0.2:8761/eureka"
+java -Dserver.port=18001 -jar eureka/hello-service/build/libs/hello-service-0.0.1.jar
+java -Dserver.port=18002 -jar eureka/hello-service/build/libs/hello-service-0.0.1.jar
+
+# Foo-services
+java -jar eureka/foo-service/build/libs/foo-service-0.0.1.jar
