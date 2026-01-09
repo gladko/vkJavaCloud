@@ -1,3 +1,4 @@
 dependencies {
-//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation "com.orbitz.consul:consul-client:1.5.3"
+    implementation "com.ecwid.consul:consul-api:1.4.5"
 }

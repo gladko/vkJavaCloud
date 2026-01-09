@@ -25,6 +25,11 @@ tasks.register('buildZkImages') {
     dependsOn ":zk-foo:buildDockerImage"
 }
 
+tasks.register('buildConsulImages') {
+    dependsOn ":consul-hello:buildDockerImage"
+    dependsOn ":consul-foo:buildDockerImage"
+}
+
 allprojects {
     group = 'vk.vkPets'
     version = '0.0.1'

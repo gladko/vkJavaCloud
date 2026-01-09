@@ -1,12 +1,7 @@
 spring:
   application:
-    name: eu-foo-service
+    name: consul-foo-service
 server:
   port: 18100
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-
-hello-service-name: eu-hello-service
+hello-service-name: consul-hello-service

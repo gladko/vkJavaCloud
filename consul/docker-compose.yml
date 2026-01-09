@@ -1,0 +1,24 @@
+services:
+  my-consul:
+    image: consul:1.15.4
+    restart: always
+    ports:
+      - "8500:8500"
+
+  hello-service:
+    image: consul-hello
+    deploy: # works only in swarm mode (docker stack deploy).
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "18000:18000"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=my-consul
+
+  foo-service:
+    image: consul-foo
+    ports:
+      - "18100:18100"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=my-consul
