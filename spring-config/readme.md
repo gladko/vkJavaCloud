@@ -1,0 +1,1 @@
+Trigger a POST refresh call to http://localhost:8888/actuator/refresh will return latest configurations at runtime.
