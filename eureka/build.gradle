@@ -1,5 +1,0 @@
-tasks.register('buildImages') {
-    dependsOn ":eureka:eureka-server:buildDockerImage"
-    dependsOn ":eureka:hello-service:buildDockerImage"
-    dependsOn ":eureka:foo-service:buildDockerImage"
-}

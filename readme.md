@@ -43,3 +43,6 @@ jcmd | Select-String "vk.vkPets" | ForEach-Object {
     kill ($_ -split '\s+')[0]
 }
 ```
+
+
+https://github.com/spring-cloud/spring-cloud-kubernetes

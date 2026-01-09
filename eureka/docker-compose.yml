@@ -7,7 +7,7 @@ services:
       - "8761:8761"
 
   hello-service:
-    image: hello-service
+    image: eu-hello
     deploy:         # works only in swarm mode (docker stack deploy).
       replicas: 3
       restart_policy:
@@ -21,7 +21,7 @@ services:
       - EUREKA_URL=http://eureka-server:8761/eureka
 
   foo-service:
-    image: foo-service
+    image: eu-foo
     ports:
       - "18100:18100"
     depends_on:

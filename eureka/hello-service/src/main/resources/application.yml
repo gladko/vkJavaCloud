@@ -1,6 +1,6 @@
 spring:
   application:
-    name: hello-service
+    name: eu-hello-service
 server:
   port: 18000
 

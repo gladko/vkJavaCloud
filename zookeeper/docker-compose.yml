@@ -7,7 +7,7 @@ services:
       - "2180:8080"
 
   hello-service:
-    image: hello-service
+    image: zk-hello
     deploy: # works only in swarm mode (docker stack deploy).
       replicas: 3
       restart_policy:
@@ -18,7 +18,7 @@ services:
       - SPRING_CLOUD_ZOOKEEPER_CONNECT-STRING=zoo:2181
 
   foo-service:
-    image: foo-service
+    image: zk-foo
     ports:
       - "18100:18100"
     environment:

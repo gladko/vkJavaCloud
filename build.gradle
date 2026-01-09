@@ -12,6 +12,18 @@ plugins {
     id 'org.springframework.boot'
     id 'com.bmuschko.docker-remote-api'
 }
+//apply from: '../../docker.gradle'
+
+tasks.register('buildEurekaImages') {
+    dependsOn ":eureka-server:buildDockerImage"
+    dependsOn ":eu-hello:buildDockerImage"
+    dependsOn ":eu-foo:buildDockerImage"
+}
+
+tasks.register('buildZkImages') {
+    dependsOn ":zk-hello:buildDockerImage"
+    dependsOn ":zk-foo:buildDockerImage"
+}
 
 allprojects {
     group = 'vk.vkPets'

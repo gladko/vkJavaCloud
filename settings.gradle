@@ -9,13 +9,25 @@ pluginManagement {
     }
 }
 
-include 'consul:vkConsul'
-include 'etcd:vkEtcd'
-include 'eureka:eureka-server'
-include 'eureka:foo-service'
-include 'eureka:hello-service'
-include 'k8s:k8sSandbox'
-include 'zookeeper:foo-service'
-include 'zookeeper:zkSandbox'
-include 'zookeeper:hello-service'
-include 'eureka:euSandbox'
+
+include 'etcd-sandbox'
+include 'k8s-sandbox'
+include 'eureka-server', 'eu-sandbox', 'eu-foo', 'eu-hello'
+include 'zk-sandbox', 'zk-foo', 'zk-hello'
+include 'consul-sandbox', 'consul-foo', 'consul-hello'
+
+project(':consul-sandbox').projectDir = file('consul/sandbox')
+project(':consul-hello').projectDir = file('consul/hello-service')
+project(':consul-foo').projectDir = file('consul/foo-service')
+
+project(':etcd-sandbox').projectDir = file('etcd/sandbox')
+project(':k8s-sandbox').projectDir = file('k8s/sandbox')
+
+project(':eureka-server').projectDir = file('eureka/eureka-server')
+project(':eu-sandbox').projectDir = file('eureka/sandbox')
+project(':eu-foo').projectDir = file('eureka/foo-service')
+project(':eu-hello').projectDir = file('eureka/hello-service')
+
+project(':zk-sandbox').projectDir = file('zookeeper/sandbox')
+project(':zk-foo').projectDir = file('zookeeper/foo-service')
+project(':zk-hello').projectDir = file('zookeeper/hello-service')

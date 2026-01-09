@@ -1,4 +1,0 @@
-tasks.register('buildImages') {
-    dependsOn ":zookeeper:hello-service:buildDockerImage"
-    dependsOn ":zookeeper:foo-service:buildDockerImage"
-}

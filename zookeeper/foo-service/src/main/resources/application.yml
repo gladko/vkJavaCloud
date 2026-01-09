@@ -1,8 +1,10 @@
 spring:
   application:
-    name: foo-service
+    name: zk-foo-service
 server:
   port: 18100
+
+hello-service-name: zk-hello-service
 
 endpoints:
   restart:

@@ -1,6 +1,7 @@
 package vk.vkPets;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -21,6 +22,8 @@ public class FooController {
     private LoadBalancerClient loadBalancer;
     @Autowired
     private RestTemplate restTemplate;
+    @Value("${hello-service-name}")
+    private String helloServiceName;
 
     public FooController(DiscoveryClient discoveryClient, RestClient.Builder restClientBuilder) {
         this.discoveryClient = discoveryClient;
@@ -34,18 +37,18 @@ public class FooController {
                 "<br>Try the following endpoints:" +
                 "<br>  /foo" +
                 "<br>  /testresttemplate" +
-                "<br>  /discovery?service=hello-service" +
-                "<br>  /lb?service=hello-service";
+                "<br>  /discovery?service=" + helloServiceName +
+                "<br>  /lb?service=" + helloServiceName;
     }
 
     @GetMapping("/testresttemplate")
     public String testRestTemplate() {
-        return restTemplate.getForObject("http://hello-service/hi", String.class);
+        return restTemplate.getForObject("http://" + helloServiceName + "/hi", String.class);
     }
 
     @GetMapping("/foo")
     public String foo() {
-        List<ServiceInstance> serviceInstances = discoveryClient.getInstances("hello-service");
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(helloServiceName);
         System.out.println("Found hello service instances: " + serviceInstances);
         if (serviceInstances.isEmpty()) {
             return "Hello service not found. Register any instance";
