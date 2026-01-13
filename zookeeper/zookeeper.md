@@ -18,3 +18,5 @@ ZK stores data on disk and apply it when restarts.
 
 [Deep Dive into Apache ZooKeeper](https://medium.com/codetodeploy/deep-dive-into-apache-zookeeper-c50383e6b716)
 https://spring.io/projects/spring-cloud-zookeeper#overview
+
+[Kafka ZooKeeper—Limitations and alternatives](https://www.redpanda.com/guides/kafka-architecture-kafka-zookeeper)
