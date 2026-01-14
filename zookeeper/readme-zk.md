@@ -20,3 +20,8 @@ containers.
 
 CLI `./workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkCli.sh -server 172.17.244.18:2181`
 
+Spring registry: org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry
+
+
+## x-discovery problems:
+no way to subscribe for node updates. Only explicit `queryForInstances` is possible.
