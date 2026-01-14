@@ -2,6 +2,14 @@
 ## Install docker image
 [install](https://github.com/etcd-io/etcd/releases/tag/v3.6.7)
 
+Start simple
+```bash
+docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
+  --listen-client-urls http://0.0.0.0:2379 \
+  --advertise-client-urls http://0.0.0.0:2379
+```
+
+Start complex
 ```bash
 ETCD_VER=v3.6.7
 

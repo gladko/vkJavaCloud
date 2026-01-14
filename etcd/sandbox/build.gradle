@@ -6,21 +6,12 @@ dependencies {
 
     runtimeOnly "ch.qos.logback:logback-classic:1.5.21" // logging
 
-//    testImplementation "org.testcontainers:toxiproxy${testContainersVersion}"
-//    testImplementation "org.testcontainers:junit-jupiter${testContainersVersion}"
-//    testImplementation "org.testcontainers:testcontainers${testContainersVersion}"
+    testImplementation "org.testcontainers:testcontainers-toxiproxy:${testContainersVersion}"
+    testImplementation "org.testcontainers:testcontainers-junit-jupiter:${testContainersVersion}"
+    testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
+    testImplementation("io.etcd:jetcd-launcher:0.8.6")
 
-    testImplementation "org.testcontainers:testcontainers:2.0.2"
-    testImplementation "org.testcontainers:testcontainers-junit-jupiter:2.0.2"
-
-    implementation platform('org.testcontainers:testcontainers-bom:2.0.2') //import bom
-    testImplementation('org.testcontainers:testcontainers-mysql') //no version specified
-    testImplementation('org.testcontainers:testcontainers-postgresql') //no version specified
-
-
-    //    implementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
-//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-
-    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+//    implementation platform('org.testcontainers:testcontainers-bom:2.0.2') //import bom
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 }

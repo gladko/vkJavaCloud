@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-public class Observer {
+public class Observer implements AutoCloseable {
     public static void main(String[] args) throws Exception {
         new Observer(LoggerFactory.getLogger(Observer.class));
         Thread.sleep(Long.MAX_VALUE);
@@ -104,6 +104,7 @@ public class Observer {
         return etcdKey.replaceAll(Pattern.quote(Node.NODES_PREFIX), "");
     }
 
+    @Override
     public void close() {
         watcher.close();
         etcdClient.close();
