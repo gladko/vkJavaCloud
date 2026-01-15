@@ -64,6 +64,14 @@ Hello, etcd
 ```
 
 ## Java client
-[api](https://github.com/etcd-io/jetcd)
-[api-tests](https://github.com/etcd-io/jetcd/tree/main/jetcd-core/src/test/java/io/etcd/jetcd/impl)
+[jetcd](https://github.com/etcd-io/jetcd)
+[jetcd-tests](https://github.com/etcd-io/jetcd/tree/main/jetcd-core/src/test/java/io/etcd/jetcd/impl)
 [Managing Cluster Membership with Etcd](https://dev.to/frosnerd/managing-cluster-membership-with-etcd-l0k)
+
+
+## HTTP API
+[API](https://etcd.io/docs/v3.4/dev-guide/api_grpc_gateway)
+```bash
+curl http://localhost:2379/version
+curl -L http://localhost:2379/v3/kv/put   -X POST -d '{"key": "Zm9v", "value": "YmFy"}'
+```

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class EtcdServiceRegistrySandbox {
     private static final String ETCD_ENDPOINT = "https://localhost:2379";
+//    private static final String ETCD_ENDPOINT = "https://localhost:12379";
     private static final String SERVICES_PREFIX = "/services/";
     private static final String serviceName = "my-service";
     private static final long leaseTtl = 5; // seconds
@@ -40,6 +41,7 @@ public class EtcdServiceRegistrySandbox {
         Thread.sleep(5_000);
         System.out.println("Discovering services 2: " + discoverServices(client, serviceName));
 
+        Thread.sleep(5000_000);
         watcher.close();
         client.close();
     }

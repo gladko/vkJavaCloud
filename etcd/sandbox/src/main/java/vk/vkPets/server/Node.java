@@ -28,7 +28,7 @@ public class Node implements AutoCloseable {
     private final Logger logger;
 
     static final int OPERATION_TIMEOUT = 5;
-    private static final long DEFAULT_LEASE_TTL = 5;
+    private static final long DEFAULT_LEASE_TTL = 15;
     public static final String NODES_PREFIX = "/nodes/";
 
     private final NodeData nodeData;
@@ -77,6 +77,7 @@ public class Node implements AutoCloseable {
                                 @Override
                                 public void onNext(LeaseKeepAliveResponse leaseKeepAliveResponse) {
                                     logger.debug("Kept lease {} alive", leaseId);
+                                    logger.info("Kept lease {} alive", leaseId);
                                 }
 
                                 @Override
