@@ -14,6 +14,7 @@ import java.util.List;
 
 public class NodesMain {
     static final List<URI> ETCD_ENDPOINT = List.of(URI.create("http://localhost:2379"));
+    static final List<URI> ETCD_PROXY_ENDPOINT = List.of(URI.create("http://localhost:12379"));
 
     static Logger logger = LoggerFactory.getLogger("MAIN");
 
@@ -23,12 +24,13 @@ public class NodesMain {
         node1.join();
 
         Thread.sleep(3_000);
-        Observer observer = new Observer(logger);
+        Client observerClient = Client.builder().endpoints(NodesMain.ETCD_ENDPOINT).build();
+        Observer observer = new Observer(observerClient, logger);
 
         Node node2 = new Node(ETCD_ENDPOINT);
         node2.join();
 
-        Node node3 = new Node(ETCD_ENDPOINT);
+        Node node3 = new Node(ETCD_PROXY_ENDPOINT);
         node3.join();
 
         Thread.sleep(10_000);
@@ -43,6 +45,7 @@ public class NodesMain {
         logger.info("After node1 close ClusterMembers: {}", observer.getClusterMembers());
 
         observer.close();
+        observerClient.close();
         List.of(node1, node2, node3).forEach(Node::close);
     }
 

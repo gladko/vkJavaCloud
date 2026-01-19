@@ -13,13 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Node implements AutoCloseable {
+
     public static void main(String[] args) throws Exception {
-        Node node = new Node(NodesMain.ETCD_ENDPOINT);
+//        Node node = new Node(NodesMain.ETCD_ENDPOINT);
+        Node node = new Node(NodesMain.ETCD_PROXY_ENDPOINT, 10);
         node.join();
 
         Thread.sleep(Long.MAX_VALUE);
@@ -28,17 +31,17 @@ public class Node implements AutoCloseable {
     private final Logger logger;
 
     static final int OPERATION_TIMEOUT = 5;
-    private static final long DEFAULT_LEASE_TTL = 15;
+    private static final long DEFAULT_LEASE_TTL = 5;
     public static final String NODES_PREFIX = "/nodes/";
 
     private final NodeData nodeData;
 
     private final Client etcdClient;
+    private final Observer observer;
 
     private final long leaseTtl;
     private volatile long leaseId;
     private volatile CloseableClient keepAliveClient;
-
 
 
     public Node(List<URI> endpoints) throws Exception {
@@ -52,6 +55,7 @@ public class Node implements AutoCloseable {
 
         logger.info("Connecting to etcd on the following endpoints: {}", endpoints);
         etcdClient = Client.builder().endpoints(endpoints).build();
+        observer = new Observer(etcdClient, logger);
     }
 
     public void join() throws Exception {
@@ -123,6 +127,10 @@ public class Node implements AutoCloseable {
 
     public NodeData getNodeData() {
         return nodeData;
+    }
+
+    public Collection<NodeData> getClusterMembers() {
+        return observer.getClusterMembers();
     }
 
     @Override

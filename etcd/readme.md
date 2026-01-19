@@ -63,6 +63,29 @@ greeting
 Hello, etcd
 ```
 
+## RUN with toxiproxy
+```bash
+docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
+  --listen-client-urls http://0.0.0.0:2379 \
+  --advertise-client-urls http://0.0.0.0:2379
+  
+docker run -p 8474:8474 -d --name toxiproxy --net=host shopify/toxiproxy
+
+docker exec -it toxiproxy sh
+# in toxiproxy-container run
+/go/bin/toxiproxy-cli  create -l localhost:12379 -u localhost:2379 etcd-proxy
+# in another terminal or in web browser
+curl http://localhost:12379/version
+
+/go/bin/toxiproxy-cli toxic add etcd-proxy -t latency -n myToxic -a latency=3000 
+/go/bin/toxiproxy-cli toxic remove -n myToxic etcd-proxy
+
+/go/bin/toxiproxy-cli delete etcd-proxy
+
+docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
+```
+
+
 ## Java client
 [jetcd](https://github.com/etcd-io/jetcd)
 [jetcd-tests](https://github.com/etcd-io/jetcd/tree/main/jetcd-core/src/test/java/io/etcd/jetcd/impl)

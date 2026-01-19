@@ -21,18 +21,22 @@ import java.util.regex.Pattern;
 
 public class Observer implements AutoCloseable {
     public static void main(String[] args) throws Exception {
-        new Observer(LoggerFactory.getLogger(Observer.class));
+        Client build = Client.builder().endpoints(NodesMain.ETCD_ENDPOINT).build();
+        new Observer(build, LoggerFactory.getLogger(Observer.class));
+
         Thread.sleep(Long.MAX_VALUE);
     }
 
     private final Logger logger;
 
-    private final Client etcdClient = Client.builder().endpoints(NodesMain.ETCD_ENDPOINT).build();
+    private final Client etcdClient;
     private final ConcurrentHashMap<UUID, NodeData> clusterMembers = new ConcurrentHashMap<>();
     private Watch.Watcher watcher;
 
-    public Observer(Logger logger) throws Exception {
+
+    public Observer(Client etcdClient, Logger logger) throws Exception {
         this.logger = logger;
+        this.etcdClient = etcdClient;
         long maxModRevision = loadMembershipSnapshot();
         watchMembershipChanges(maxModRevision);
     }
@@ -53,11 +57,10 @@ public class Observer implements AutoCloseable {
 
         for (KeyValue kv : response.getKvs()) {
             NodeData nodeData = JsonObjectMapper.read(kv.getValue().toString(StandardCharsets.UTF_8));
-            logger.info("LOAD {}", nodeData);
             clusterMembers.put(nodeData.getUuid(), nodeData);
         }
-        return response.getKvs().stream()
-                .mapToLong(KeyValue::getModRevision).max().orElse(0);
+        logger.info("--> LOADED {}", getClusterMembers());
+        return response.getHeader().getRevision();
     }
 
     private void watchMembershipChanges(long fromRevision) {
@@ -107,6 +110,5 @@ public class Observer implements AutoCloseable {
     @Override
     public void close() {
         watcher.close();
-        etcdClient.close();
     }
 }
