@@ -1,5 +1,9 @@
-in WSL go to `/mnt/c/Users/vkozak/workspace/projects/vkPets/vkJavaCloud`
-
+## Coordination examples
+- [Zookeeper in Kafka](https://github.com/AutoMQ/automq/wiki/What-is-the-Zookeeper-in-Kafka-All-You-Need-to-Know)
+- [Hazelcast Cloud Discovery](https://docs.hazelcast.com/hazelcast/5.4/plugins/cloud-discovery)
+- https://github.com/hazelcast/hazelcast-eureka
+- https://github.com/hazelcast/hazelcast-zookeeper
+- [Zookeeper in ignite](https://github.com/apache/ignite/blob/master/modules/zookeeper/src/main/java/org/apache/ignite/spi/discovery/zk/ZookeeperDiscoverySpi.java)
 
 ## remove docker images
 ```bash

@@ -90,6 +90,8 @@ class NodeTest2 {
                         .until(() -> node2.getClusterMembers()
                                 .containsAll(List.of(node1.getNodeData(), node2.getNodeData())));
             }
+
+            logger.info("checking Node 1 to see that node 2 is gone ... ");
             Awaitility.await("Node 1 to see that node 2 is gone")
                     .until(() -> node1.getClusterMembers()
                             .equals(Set.of(node1.getNodeData())));

@@ -10,12 +10,16 @@ import org.apache.curator.utils.CloseableUtils;
 import org.apache.curator.x.discovery.*;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
+import org.apache.curator.x.discovery.details.ServiceDiscoveryImpl;
+import org.apache.curator.x.discovery.details.VkServiceCacheImpl;
 import org.apache.curator.x.discovery.strategies.RandomStrategy;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class XDiscoveryTest {
@@ -129,6 +133,23 @@ public class XDiscoveryTest {
         }
     }
 
+    @Test
+    public void listenStateChanges2() throws Exception {
+        String serviceName = "TEST_UPDATES_SERVICE";
+        List<XServerNode> testServers = new ArrayList<>();
+
+        try (VkServiceCacheImpl cache = new VkServiceCacheImpl((ServiceDiscoveryImpl) serviceDiscovery,
+                serviceName, Thread::new))
+        {
+            cache.start();
+            action(cache, serviceName, testServers);
+
+            Thread.sleep(500000);
+            System.out.println("DONE");
+        } finally {
+            testServers.forEach(XServerNode::close);
+        }
+    }
 
     @Test
     public void listenStateChanges() throws Exception {
@@ -158,29 +179,33 @@ public class XDiscoveryTest {
 
             cache.start();
 
-            System.out.println("startup cached instances: " + cache.getInstances());
-            System.out.println("listening for " + PATH + ", service: " + serviceName);
-
-            System.out.println("adding");
-            addServers(testServers, serviceName, 3);
-
-            Thread.sleep(5000);
-            System.out.println("updating");
-            testServers.get(0).update("bar");
-
-            Thread.sleep(5000);
-            System.out.println("closing");
-            testServers.get(0).close();
-            Thread.sleep(1000);
-            testServers.get(1).close();
-            Thread.sleep(1000);
-            testServers.get(2).close();
+            action(cache, serviceName, testServers);
 
             Thread.sleep(500000);
             System.out.println("DONE");
         } finally {
             testServers.forEach(XServerNode::close);
         }
+    }
+
+    private static void action(ServiceCache<NodeDetails> cache, String serviceName, List<XServerNode> testServers) throws Exception {
+        System.out.println("startup cached instances: " + cache.getInstances());
+        System.out.println("listening for " + PATH + ", service: " + serviceName);
+
+        System.out.println("adding");
+        addServers(testServers, serviceName, 3);
+
+        Thread.sleep(5000);
+        System.out.println("updating");
+        testServers.get(0).update("bar");
+
+        Thread.sleep(5000);
+        System.out.println("closing");
+        testServers.get(0).close();
+        Thread.sleep(1000);
+        testServers.get(1).close();
+        Thread.sleep(1000);
+        testServers.get(2).close();
     }
 
     private static void printInstance(ServiceInstance<NodeDetails> instance) {

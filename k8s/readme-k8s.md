@@ -39,3 +39,8 @@ The 3xxxx is the NodePort on your local machine.
 
 Open in your browser or curl:
 http://localhost:<NodePort>
+
+
+
+See com.hazelcast.kubernetes.KubernetesClient 
+and com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy
