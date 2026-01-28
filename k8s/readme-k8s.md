@@ -41,6 +41,6 @@ Open in your browser or curl:
 http://localhost:<NodePort>
 
 
-
+## Client examples
 See com.hazelcast.kubernetes.KubernetesClient 
 and com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy

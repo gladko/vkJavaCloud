@@ -49,7 +49,7 @@ docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl get foo
 ```bash
 $ ./etcd
 ```
-
+Then check...
 From another terminal, use etcdctl to set a key:
 ```bash
 $ ./etcdctl put greeting "Hello, etcd"
@@ -89,6 +89,8 @@ docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
 ## Java client
 [jetcd](https://github.com/etcd-io/jetcd)
 [jetcd-tests](https://github.com/etcd-io/jetcd/tree/main/jetcd-core/src/test/java/io/etcd/jetcd/impl)
+
+## Examples
 [Managing Cluster Membership with Etcd](https://dev.to/frosnerd/managing-cluster-membership-with-etcd-l0k)
 
 
