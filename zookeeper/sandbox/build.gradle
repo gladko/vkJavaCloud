@@ -1,7 +1,7 @@
 dependencies {
     implementation "org.apache.curator:curator-framework:${curatorVersion}"  // required for compatibility. Otherwise, 5.1.0 is used
     // workaround of absence of required version (4.1.105) of netty in maven central
-    implementation("io.netty:netty-transport-native-epoll:4.1.132.Final")
+//    implementation("io.netty:netty-transport-native-epoll:4.1.132.Final")
 
     api "org.apache.curator:curator-recipes:${curatorVersion}"
     api "org.apache.curator:curator-x-discovery:${curatorVersion}"
