@@ -1,12 +1,15 @@
 dependencies {
-//    implementation "org.apache.curator:curator-framework:5.8.0"
-    api "org.apache.curator:curator-recipes:5.8.0"
-    api "org.apache.curator:curator-x-discovery:5.8.0"
+    implementation "org.apache.curator:curator-framework:${curatorVersion}"  // required for compatibility. Otherwise, 5.1.0 is used
+    // workaround of absence of required version (4.1.105) of netty in maven central
+    implementation("io.netty:netty-transport-native-epoll:4.1.132.Final")
+
+    api "org.apache.curator:curator-recipes:${curatorVersion}"
+    api "org.apache.curator:curator-x-discovery:${curatorVersion}"
 //    implementation "com.fasterxml.jackson.core:jackson-databind:2.18.4"
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    implementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     implementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 
     testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
     testImplementation 'org.assertj:assertj-core:3.27.4'
