@@ -2,7 +2,7 @@ apiVersion: apps/v1
 
 kind: Deployment
 metadata:
-  name: vk-deployment2
+  name: vk-cloud-hello
   labels:
     app: k8s-hello
 spec:
