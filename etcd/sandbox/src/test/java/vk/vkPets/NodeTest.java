@@ -10,19 +10,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.toxiproxy.ToxiproxyContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
+import org.testcontainers.toxiproxy.ToxiproxyContainer;
 import vk.vkPets.server.LeaveFailedException;
 import vk.vkPets.server.Node;
 import vk.vkPets.server.Observer;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,11 +31,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class NodeTest {
     static Logger logger = LoggerFactory.getLogger(NodeTest.class);
 
+    protected List<URI> etcdEndpoints;
+
     static final String ETCD_DOCKER_IMAGE_NAME = "gcr.io/etcd-development/etcd:v3.6.7";
     private static final Network network = Network.newNetwork();
     private static final int ETCD_PORT = 2379;
 
-//    private ToxiproxyContainer etcdProxy;
+    //    private ToxiproxyContainer etcdProxy;
     private static ToxiproxyClient toxiproxyClient;
     private static Proxy proxy;
 
@@ -63,6 +65,8 @@ class NodeTest {
         toxiproxyClient.reset();
 
 //        etcdProxy = toxiproxy.getProxy(etcd, ETCD_PORT);
+
+        etcdEndpoints = getEtcdEndpoints();
     }
 
     @BeforeAll
@@ -78,29 +82,29 @@ class NodeTest {
         toxiproxy.close();
     }
 
-
-    private List<URI> getClientEndpoints() {
+    protected List<URI> getEtcdEndpoints() {
         return List.of(URI.create(
-                "https://" + etcd.getHost() +
-                        ":" + etcd.getMappedPort(ETCD_PORT)
+                "https://" + etcd.getHost() + ":" + etcd.getMappedPort(ETCD_PORT)
+//                "https://" + etcd.getContainerIpAddress() + ":" + etcd.getMappedPort(ETCD_PORT)));
         ));
     }
 
-    private List<URI> getProxiedClientEndpoints() {
-//        return List.of(URI.create(
-//                "https://" + proxy.getHost() +
-//                        ":" + proxy.getMappedPort(8666)
-//        ));
-        return List.of(URI.create("https://localhost:8666"));
+    private List<URI> getProxiedEtcdEndpoints() {
+        return List.of(URI.create(
+                "https://localhost:8666"
+//                "https://" + proxy.getHost() + ":" + proxy.getMappedPort(8666)
+//                "https://" + etcdProxy.getContainerIpAddress() + ":" + etcdProxy.getProxyPort()));
+        ));
     }
+
 
     @Test
     public void testTwoNodesJoinLeave() throws Exception {
         long leaseTtl = 3;
-        List<URI> endpoints = getClientEndpoints();
-        try (Node node1 = new Node(endpoints, leaseTtl)) {
+
+        try (Node node1 = new Node(etcdEndpoints, leaseTtl)) {
             node1.join();
-            try (Node node2 = new Node(endpoints, leaseTtl)) {
+            try (Node node2 = new Node(etcdEndpoints, leaseTtl)) {
                 node2.join();
 
                 logger.info("checking all nodes ...");
@@ -124,10 +128,9 @@ class NodeTest {
     @Test
     public void testTwoNodesLeaseExpires() throws Exception {
         long leaseTtl = 1;
-        List<URI> clientEndpoints = getClientEndpoints();
-        try (Node node1 = new Node(clientEndpoints, leaseTtl)) {
+        try (Node node1 = new Node(etcdEndpoints, leaseTtl)) {
             node1.join();
-            try (Node node2 = new Node(getProxiedClientEndpoints(), leaseTtl)) {
+            try (Node node2 = new Node(getProxiedEtcdEndpoints(), leaseTtl)) {
                 node2.join();
 
                 Awaitility.await("See all nodes").until(() -> node1.getClusterMembers()
@@ -148,18 +151,15 @@ class NodeTest {
     @Test
     public void testLargerCluster() throws Exception {
         int clusterSize = 100;
-        List<URI> clientEndpoints = getClientEndpoints();
-        List<Node> cluster = Stream.generate(() -> {
-            try {
-                return new Node(clientEndpoints);
-            } catch (Exception e) {
-                return null;
-            }
-        }).limit(clusterSize).toList();
+
+        List<Node> cluster = new ArrayList<>();
+        for (int i = 0; i < clusterSize; i++) {
+            cluster.add(new Node(etcdEndpoints));
+        }
 
         assertEquals(clusterSize, cluster.size());
 
-        try (Client etcdClient = Client.builder().endpoints(clientEndpoints).build();
+        try (Client etcdClient = Client.builder().endpoints(etcdEndpoints).build();
              Observer observer = new Observer(etcdClient, logger))
         {
             for (Node node : cluster) {

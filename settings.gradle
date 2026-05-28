@@ -23,7 +23,7 @@ project(':consul-hello').projectDir = file('consul/hello-service')
 project(':consul-foo').projectDir = file('consul/foo-service')
 
 project(':etcd-sandbox').projectDir = file('etcd/sandbox')
-project(':k8s-sandbox').projectDir = file('k8s/sandbox')
+project(':k8s-sandbox').projectDir = file('k8s/clientSandbox')
 
 project(':eureka-server').projectDir = file('eureka/eureka-server')
 project(':eu-sandbox').projectDir = file('eureka/sandbox')

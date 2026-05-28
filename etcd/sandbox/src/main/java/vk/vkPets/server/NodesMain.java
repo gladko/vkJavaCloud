@@ -1,19 +1,14 @@
 package vk.vkPets.server;
 
-import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
-import io.etcd.jetcd.KeyValue;
-import io.etcd.jetcd.kv.GetResponse;
-import io.etcd.jetcd.options.GetOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class NodesMain {
-    static final List<URI> ETCD_ENDPOINT = List.of(URI.create("http://localhost:2379"));
+    public static final List<URI> ETCD_ENDPOINT = List.of(URI.create("http://localhost:2379"));
     static final List<URI> ETCD_PROXY_ENDPOINT = List.of(URI.create("http://localhost:12379"));
 
     static Logger logger = LoggerFactory.getLogger("MAIN");
@@ -51,18 +46,8 @@ public class NodesMain {
 
     private static void showMembers() throws Exception {
         Client etcdClient = Client.builder().endpoints(ETCD_ENDPOINT).build();
-
-        GetResponse response = etcdClient.getKVClient().get(
-                ByteSequence.from(Node.NODES_PREFIX, StandardCharsets.UTF_8),
-                GetOption.builder()
-                        .isPrefix(true)
-                        .build()
-        ).get();
-
-        for (KeyValue kv : response.getKvs()) {
-            NodeData nodeData = JsonObjectMapper.read(kv.getValue().toString(StandardCharsets.UTF_8));
-            logger.info("---> {}", nodeData);
-        }
+        Observer observer = new Observer(etcdClient, logger);
+        observer.close();
         etcdClient.close();
     }
 }

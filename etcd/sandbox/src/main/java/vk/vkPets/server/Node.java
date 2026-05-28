@@ -3,7 +3,6 @@ package vk.vkPets.server;
 
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
-import io.etcd.jetcd.Lease;
 import io.etcd.jetcd.lease.LeaseKeepAliveResponse;
 import io.etcd.jetcd.options.PutOption;
 import io.etcd.jetcd.support.CloseableClient;
@@ -21,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class Node implements AutoCloseable {
 
     public static void main(String[] args) throws Exception {
-//        Node node = new Node(NodesMain.ETCD_ENDPOINT);
-        Node node = new Node(NodesMain.ETCD_PROXY_ENDPOINT, 10);
+        Node node = new Node(NodesMain.ETCD_ENDPOINT);
+//        Node node = new Node(NodesMain.ETCD_PROXY_ENDPOINT, 10);
         node.join();
 
         Thread.sleep(Long.MAX_VALUE);
@@ -54,7 +53,9 @@ public class Node implements AutoCloseable {
         logger = LoggerFactory.getLogger(nodeData.getUuid().toString());
 
         logger.info("Connecting to etcd on the following endpoints: {}", endpoints);
-        etcdClient = Client.builder().endpoints(endpoints).build();
+        etcdClient = Client.builder()
+                .endpoints(endpoints)
+                .build();
         observer = new Observer(etcdClient, logger);
     }
 
@@ -70,31 +71,27 @@ public class Node implements AutoCloseable {
     }
 
     private void grantLease() throws Exception {
-        Lease leaseClient = etcdClient.getLeaseClient();
         logger.info("Granting lease");
-        leaseClient.grant(leaseTtl)
-                .thenAccept((leaseGrantResponse -> {
-                    leaseId = leaseGrantResponse.getID();
-                    logger.info("Lease {} granted", leaseId);
-                    keepAliveClient = leaseClient.keepAlive(leaseId,
-                            new StreamObserver<>() {
-                                @Override
-                                public void onNext(LeaseKeepAliveResponse leaseKeepAliveResponse) {
-                                    logger.debug("Kept lease {} alive", leaseId);
-                                    logger.info("Kept lease {} alive", leaseId);
-                                }
+        leaseId = etcdClient.getLeaseClient().grant(leaseTtl).get().getID();
+        logger.info("Lease {} granted", leaseId);
 
-                                @Override
-                                public void onError(Throwable throwable) {
-                                    logger.error("Failed to keep lease {} alive", leaseId);
-                                }
+        keepAliveClient = etcdClient.getLeaseClient().keepAlive(leaseId, new StreamObserver<>() {
+                    @Override
+                    public void onNext(LeaseKeepAliveResponse leaseKeepAliveResponse) {
+                        logger.debug("Kept lease {} alive", leaseId);
+//                        logger.info("Kept lease {} alive", leaseId);
+                    }
 
-                                @Override
-                                public void onCompleted() {
-                                    logger.debug("Lease completed");
-                                }
-                            });
-                })).get(OPERATION_TIMEOUT, TimeUnit.SECONDS);
+                    @Override
+                    public void onError(Throwable throwable) {
+                        logger.error("Failed to keep lease {} alive", leaseId);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        logger.debug("Lease completed");
+                    }
+                });
     }
 
     private void putMetadata() throws Exception {

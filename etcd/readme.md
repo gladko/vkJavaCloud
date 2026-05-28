@@ -2,6 +2,25 @@
 ## Install docker image
 [install](https://github.com/etcd-io/etcd/releases/tag/v3.6.7)
 
+
+## Launch etcd on Windows:
+```bash
+ETCD_HOME=~/workspace/tools/etcd-v3.6.7-windows-amd64
+exec $ETCD_HOME/etcd
+# ~/workspace/tools/etcd-v3.6.7-windows-amd64/etcd
+```
+Then check...
+From another terminal, use etcdctl to set a key:
+```bash
+./etcdctl put greeting "Hello, etcd"
+OK
+```
+Then kill...
+```bash
+kill -9 $(ps | grep "/tools/etcd" | awk '{print $3}')
+```
+
+## Launch etcd with docker:
 Start simple
 ```bash
 docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
@@ -45,43 +64,34 @@ docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl put foo bar
 docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl get foo
 ```
 
-## Launch etcd on Windows:
-```bash
-$ ./etcd
-```
-Then check...
-From another terminal, use etcdctl to set a key:
-```bash
-$ ./etcdctl put greeting "Hello, etcd"
-OK
-```
 
-From the same terminal, retrieve the key:
-```bash
-$ ./etcdctl get greeting
-greeting
-Hello, etcd
-```
 
 ## RUN with toxiproxy
 ```bash
+# 1. start etcd
 docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
   --listen-client-urls http://0.0.0.0:2379 \
   --advertise-client-urls http://0.0.0.0:2379
   
+# 2. start toxiproxy
 docker run -p 8474:8474 -d --name toxiproxy --net=host shopify/toxiproxy
 
+# 3. configure toxiproxy
+#   3.1 go into toxiproxy container  
 docker exec -it toxiproxy sh
-# in toxiproxy-container run
+#   3.2 in toxiproxy-container create proxy rule
 /go/bin/toxiproxy-cli  create -l localhost:12379 -u localhost:2379 etcd-proxy
-# in another terminal or in web browser
+
+# 4. in another terminal or in web browser validate that the rule works
 curl http://localhost:12379/version
 
+# 5. modify the proxy rule
 /go/bin/toxiproxy-cli toxic add etcd-proxy -t latency -n myToxic -a latency=3000 
 /go/bin/toxiproxy-cli toxic remove -n myToxic etcd-proxy
 
 /go/bin/toxiproxy-cli delete etcd-proxy
 
+# 6. stop and remove toxiproxy container
 docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
 ```
 

@@ -49,10 +49,7 @@ public class Observer implements AutoCloseable {
         // TODO handle pagination?
         GetResponse response = etcdClient.getKVClient().get(
                 ByteSequence.from(Node.NODES_PREFIX, StandardCharsets.UTF_8),
-                GetOption.builder()
-//                        .withPrefix(ByteSequence.from(NODES_PREFIX, StandardCharsets.UTF_8))
-                        .isPrefix(true)
-                        .build()
+                GetOption.builder().isPrefix(true).build()
         ).get(Node.OPERATION_TIMEOUT, TimeUnit.SECONDS);
 
         for (KeyValue kv : response.getKvs()) {
