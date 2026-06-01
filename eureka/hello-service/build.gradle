@@ -2,6 +2,12 @@ plugins {
     id 'org.springframework.boot'
 }
 
+containerPorts = ["18000:18000"]
+containerEnv = [
+        "SPRING_PROFILES_ACTIVE": "docker",
+        "EUREKA_URL": "http://eureka-server:8761/eureka"
+]
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

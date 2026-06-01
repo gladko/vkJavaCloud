@@ -17,6 +17,20 @@ spec:
     spec:
       containers:
         - name: k8s-hello
-          image: vladika/k8s-hello:latest
+          image: localhost:5000/k8s-hello:latest
           ports:
             - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vk-cloud-hello
+spec:
+  selector:
+    app: k8s-hello
+  ports:
+    - protocol: TCP
+      port: 80          # service port
+      targetPort: 8080  # container port your app listens on
+  type: NodePort

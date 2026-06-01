@@ -1,4 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 buildscript {
     repositories {
@@ -10,7 +9,7 @@ buildscript {
 
 plugins {
     id 'org.springframework.boot'
-    id 'com.bmuschko.docker-remote-api'
+    id 'com.bmuschko.docker-remote-api'  version '9.4.0'
 }
 //apply from: '../../docker.gradle'
 
@@ -69,9 +68,44 @@ subprojects {
         }
     }
 
-    tasks.register('buildDockerImage', DockerBuildImage) {
+    def containerNetwork = "vkcloud-manual-network" // must be created via "docker network create <NAME>"
+    ext.containerName = "${project.name}"
+    ext.containerImage = "localhost:5000/${project.name}:latest"
+    ext.containerPorts = []   // Default empty, overridden in subprojects
+    ext.containerEnv = [:]   // environment variables
+
+    tasks.register('buildDockerImage', com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
         dependsOn build       // make sure the JAR exists
         inputDir = project.projectDir
-        images.add("${project.name}:latest")
+        images.add("${project.containerImage}")
+    }
+
+    tasks.register('pushDockerImage', com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+        dependsOn buildDockerImage
+        images.add("${project.containerImage}")
+    }
+
+    tasks.register('createContainer', com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer) {
+        dependsOn tasks.named('pushDockerImage')
+        targetImageId project.containerImage
+        containerName = project.containerName
+        hostConfig.portBindings = project.containerPorts
+        hostConfig.network = containerNetwork
+        envVars = project.containerEnv
+    }
+
+    tasks.register('startContainer', com.bmuschko.gradle.docker.tasks.container.DockerStartContainer) {
+        dependsOn tasks.named('createContainer')
+        targetContainerId tasks.named('createContainer').get().containerId
+    }
+
+    tasks.register('stopContainer', com.bmuschko.gradle.docker.tasks.container.DockerStopContainer) {
+        targetContainerId tasks.named('createContainer').get().containerId
+    }
+
+    tasks.register('removeContainer', com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer) {
+        targetContainerId tasks.named('createContainer').get().containerId
+        dependsOn tasks.named('stopContainer')
+        force = true
     }
 }

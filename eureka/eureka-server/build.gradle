@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot'
 }
 
+containerPorts = ["8761:8761"]
+
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

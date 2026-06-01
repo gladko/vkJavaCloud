@@ -45,3 +45,15 @@ jcmd | Select-String "vk.vkPets" | ForEach-Object {
     kill ($_ -split '\s+')[0]
 }
 ```
+
+## create custom docker network.
+Allows docker individual containers access each other by name.
+`docker network create vkcloud-manual-network`
+
+docker-compose creates it automatically.
+
+Show containers attached to a specific Docker network
+```bash
+ docker network inspect vkcloud-manual-network \
+  --format '{{ range $id, $c := .Containers }}{{ $c.Name }} {{ end }}'
+```

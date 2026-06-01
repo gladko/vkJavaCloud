@@ -8,6 +8,9 @@ docker build -t k8s-hello:local .
 docker tag k8s-hello:local vladika/k8s-hello:latest
 docker push vladika/k8s-hello:latest
 
+### Push image to local docker repo
+docker tag k8s-hello:local localhost:5000/k8s-hello:latest
+docker push localhost:5000/k8s-hello:latest
 
 ## Commands
 ```bash
@@ -29,12 +32,14 @@ kubectl get svc k8s-hello-service
 NAME                TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 k8s-hello-service   NodePort   10.43.255.100   <none>        80:3xxxx/TCP     1m
 ```
-The 3xxxx is the NodePort on your local machine (WSL). Open in your browser or curl: http://localhost:<NodePort>
+The 3xxxx is the NodePort on your local machine (WSL). Open in your browser or `curl http://localhost:<NodePort>`
 
 ## Delete
 ```bash
 kubectl delete -n default service k8s-hello-service
 kubectl delete -n default deployment vk-cloud-hello
+
+kubectl delete deployment vk-cloud-hello
 ```
 
 ## Client examples

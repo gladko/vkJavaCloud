@@ -13,7 +13,8 @@ foo-service    18100
 java -Dserver.port=18002 -jar build/libs/eu-hello-0.0.1.jar
 java -Dserver.port=18002 -Deureka.client.serviceUrl.defaultZone="http://172.18.0.2:8761/eureka" -jar build/libs/eu-hello-0.0.1.jar
 
-
+# check
+curl localhost:18100/foo
 
 ## docker how-to
 1. in WSL go to `/mnt/c/Users/vkozak/workspace/projects/vkPets/vkJavaCloud`
@@ -39,3 +40,12 @@ docker container stop <HASH>
 
 docker build -t eureka-server .
 docker run -d -p 8761:8761 --name eureka-server eureka-server
+
+
+## k8s
+ - Push image to local docker repo
+docker tag eureka-server:latest localhost:5000/eureka-server:latest
+docker push localhost:5000/eureka-server:latest
+
+
+
