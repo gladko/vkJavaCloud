@@ -44,8 +44,15 @@ docker run -d -p 8761:8761 --name eureka-server eureka-server
 
 ## k8s
  - Push image to local docker repo
+`./gradlew :eureka-server:pushDockerImage`
+or
+```bash
 docker tag eureka-server:latest localhost:5000/eureka-server:latest
 docker push localhost:5000/eureka-server:latest
+```
+ - `kubectl apply -f deployment.yaml`
+ - `curl localhost:30659/discovery?service=eu-hello-service`
+ - `curl localhost:30659/foo`
 
-
-
+## Access k8s services. Port forward
+kubectl port-forward svc/eureka-server 8761:8761 -n default
