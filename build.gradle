@@ -14,9 +14,9 @@ plugins {
 //apply from: '../../docker.gradle'
 
 tasks.register('buildEurekaImages') {
-    dependsOn ":eureka-server:buildDockerImage"
-    dependsOn ":eu-hello:buildDockerImage"
-    dependsOn ":eu-foo:buildDockerImage"
+    dependsOn ":eureka:buildDockerImage"
+    dependsOn ":eu-main:buildDockerImage"
+    dependsOn ":eu-translate:buildDockerImage"
 }
 
 tasks.register('buildZkImages') {

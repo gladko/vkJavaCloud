@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: eu-main
+server:
+  port: 8080
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+translate-service-name: eu-translate

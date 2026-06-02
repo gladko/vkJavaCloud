@@ -14,26 +14,30 @@ include 'config-client'
 
 include 'etcd-sandbox'
 include 'k8s-sandbox'
-include 'eureka-server', 'eu-sandbox', 'eu-foo', 'eu-hello'
-include 'zk-sandbox', 'zk-foo', 'zk-hello', 'zk-hazelcast'
-include 'consul-sandbox', 'consul-foo', 'consul-hello'
 
-project(':consul-sandbox').projectDir = file('consul/sandbox')
-project(':consul-hello').projectDir = file('consul/hello-service')
-project(':consul-foo').projectDir = file('consul/foo-service')
+//include 'eurekaSpace'
+include 'eureka', 'eu-sandbox', 'eu-main', 'eu-translate'
+include 'zk-sandbox', 'zk-hazelcast', 'zk-main', 'zk-translate'
+include 'consul-sandbox', 'consul-main', 'consul-translate'
 
-project(':etcd-sandbox').projectDir = file('etcd/sandbox')
-project(':k8s-sandbox').projectDir = file('k8s/clientSandbox')
+project(':consul-sandbox').projectDir = file('consulSpace/sandbox')
+project(':consul-main').projectDir = file('consulSpace/consul-main')
+project(':consul-translate').projectDir = file('consulSpace/consul-translate')
 
-project(':eureka-server').projectDir = file('eureka/eureka-server')
-project(':eu-sandbox').projectDir = file('eureka/sandbox')
-project(':eu-foo').projectDir = file('eureka/foo-service')
-project(':eu-hello').projectDir = file('eureka/hello-service')
+project(':etcd-sandbox').projectDir = file('etcdSpace/sandbox')
 
-project(':zk-sandbox').projectDir = file('zookeeper/sandbox')
-project(':zk-foo').projectDir = file('zookeeper/foo-service')
-project(':zk-hello').projectDir = file('zookeeper/hello-service')
-project(':zk-hazelcast').projectDir = file('zookeeper/hazelcastZkSpi')
+project(':k8s-sandbox').projectDir = file('k8sSpace/clientSandbox')
+
+project(':eureka').projectDir = file('eurekaSpace/eureka')
+project(':eu-sandbox').projectDir = file('eurekaSpace/sandbox')
+project(':eu-main').projectDir = file('eurekaSpace/eu-main')
+project(':eu-translate').projectDir = file('eurekaSpace/eu-translate')
+
+project(':zk-sandbox').projectDir = file('zookeeperSpace/sandbox')
+project(':zk-hazelcast').projectDir = file('zookeeperSpace/hazelcastZkSpi')
+project(':zk-main').projectDir = file('zookeeperSpace/zk-main')
+project(':zk-translate').projectDir = file('zookeeperSpace/zk-translate')
+
 
 project(':config-server').projectDir = file('spring-config/config-server')
 project(':config-client').projectDir = file('spring-config/client')

@@ -1,0 +1,14 @@
+##################################################################
+# EUREKA  scenario
+##################################################################
+
+# Eureka server
+java -jar eurekaSpace/eureka/build/libs/eureka-0.0.1.jar
+
+# Translate-services
+# EUREKA_OPT=-Deureka.client.serviceUrl.defaultZone="http://172.18.0.2:8761/eureka"
+java -Dserver.port=18001 -jar eurekaSpace/eu-translate/build/libs/eu-translate-0.0.1.jar
+java -Dserver.port=18002 -jar eurekaSpace/eu-translate/build/libs/eu-translate-0.0.1.jar
+
+# Main-service
+java -jar eurekaSpace/eu-main/build/libs/eu-main-0.0.1.jar

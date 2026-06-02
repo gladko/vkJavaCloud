@@ -1,0 +1,13 @@
+##################################################################
+# Consul scenario
+##################################################################
+
+# Consul server
+docker run -d -p 8500:8500 consul:1.15.4
+
+# Translate-services
+java -Dserver.port=18001 -jar consulSpace/consul-translate/build/libs/consul-translate-0.0.1.jar
+java -Dserver.port=18002 -jar consulSpace/consul-translate/build/libs/consul-translate-0.0.1.jar
+
+# Main-service
+java -jar consulSpace/consul-main/build/libs/consul-main-0.0.1.jar
