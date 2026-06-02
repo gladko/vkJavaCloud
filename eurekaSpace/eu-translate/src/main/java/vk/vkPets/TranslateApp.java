@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.UUID;
@@ -35,10 +34,6 @@ public class TranslateApp {
         System.out.println("Let's inspect the beans provided by Spring Boot:");
         String[] beanNames = ctx.getBeanDefinitionNames();
         System.out.println("spring beans length: " + beanNames.length);
-//        Arrays.sort(beanNames);
-//        for (String beanName : beanNames) {
-//            System.out.println(beanName);
-//        }
     }
 
     @Autowired
@@ -56,7 +51,7 @@ public class TranslateApp {
     @GetMapping("/ping")
     public String ping() throws UnknownHostException {
         System.out.println("requested ping, instance : " + INSTANCE_UUID);
-        return "Pong";
+        return "Pong from " + INSTANCE_UUID;
     }
 
     @GetMapping("/translate")

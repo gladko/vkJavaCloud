@@ -17,17 +17,18 @@ docker compose down
 ```bash
 # start
 docker swarm init --advertise-addr 172.17.244.18
-docker stack deploy -c eurekaSpace/docker-compose.yml eureka-stack
+docker stack deploy -c docker-compose.yml vk-stack
 
 # usage
 http://172.17.244.18:8761/
+curl 172.17.244.18:8080/ttt
 curl 172.17.244.18:8080/services
 
-# It does NOT work. Probably because eu-translate service is registered with wrong IP.
+# It does NOT work with EUREKA. Probably because eu-translate service is registered with wrong IP.
 curl 172.17.244.18:8080/hi
 
 # stop
-docker stack rm eureka-stack
+docker stack rm vk-stack
 docker swarm leave --force
 ```
 

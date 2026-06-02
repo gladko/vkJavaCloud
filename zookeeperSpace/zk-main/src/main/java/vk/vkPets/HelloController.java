@@ -44,7 +44,8 @@ public class HelloController {
                 "<br>  /discovery?service=" + translateServiceName +
                 "<br>  /choose?service=" + translateServiceName +
                 "<br>  /nodes?service=" + translateServiceName +
-                "<br>  /services";
+                "<br>  /services" +
+                "<br>  /ttt";
     }
 
     @GetMapping("/testresttemplate")
@@ -78,11 +79,17 @@ public class HelloController {
         System.out.println("Discovered: " + serviceInstances);
         return serviceInstances.stream()
                 .map(ServiceInstance::toString)
-                .collect(Collectors.joining("<br>"));
+                .collect(Collectors.joining("<br>/n"));
     }
 
     @GetMapping("/choose")
     public ServiceInstance choose(@RequestParam String service) {
         return this.loadBalancer.choose(service);
+    }
+
+
+    @GetMapping("/ttt")
+    public String ttt() {
+        return discovery(translateServiceName);
     }
 }

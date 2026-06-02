@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.UUID;
 
 @EnableDiscoveryClient
 @SpringBootApplication
 @RestController
 public class TranslateApp {
+    private static final String INSTANCE_UUID = UUID.randomUUID().toString();
+
     private static final Map<String, String> DICTIONARY = Map.of(
             "Hello", "Hallo",
             "Good morning", "Guten Morgen",
@@ -32,10 +34,6 @@ public class TranslateApp {
         System.out.println("Let's inspect the beans provided by Spring Boot:");
         String[] beanNames = ctx.getBeanDefinitionNames();
         System.out.println("spring beans length: " + beanNames.length);
-//        Arrays.sort(beanNames);
-//        for (String beanName : beanNames) {
-//            System.out.println(beanName);
-//        }
     }
 
     @Autowired
@@ -52,13 +50,13 @@ public class TranslateApp {
 
     @GetMapping("/ping")
     public String ping() throws UnknownHostException {
-        System.out.println("requested ping, host: " + InetAddress.getLocalHost().getHostAddress());
-        return "Pong";
+        System.out.println("requested ping, instance : " + INSTANCE_UUID);
+        return "Pong from " + INSTANCE_UUID;
     }
 
     @GetMapping("/translate")
     public String translate(String input) throws Exception {
-        System.out.println("requested " + input + ", host: " + InetAddress.getLocalHost().getHostAddress());
+        System.out.println("requested " + input + ", instance : " + INSTANCE_UUID);
         return DICTIONARY.getOrDefault(input, "UNKNOWN");
     }
 
