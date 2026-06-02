@@ -8,14 +8,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class FooApp {
+public class ZkMainApp {
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(FooApp.class, args);
+        ApplicationContext ctx = SpringApplication.run(ZkMainApp.class, args);
     }
 
     @Bean

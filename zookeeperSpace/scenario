@@ -3,11 +3,13 @@
 ##################################################################
 
 # ZK
-~/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+# ~/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+# /mnt/c/Users/vkozak/workspace/tools/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
 
-# Hello-services
-java -Dserver.port=18001 -jar zookeeper/hello-service/build/libs/zk-hello-0.0.1.jar
-java -Dserver.port=18002 -jar zookeeper/hello-service/build/libs/zk-hello-0.0.1.jar
 
-# Foo-services
-java -jar zookeeper/foo-service/build/libs/zk-foo-0.0.1.jar
+# Translate-services
+java -Dserver.port=18001 -jar zookeeperSpace/zk-translate/build/libs/zk-translate-0.0.1.jar
+java -Dserver.port=18002 -jar zookeeperSpace/zk-translate/build/libs/zk-translate-0.0.1.jar
+
+# Main-services
+java -Dserver.port=8000 -jar zookeeperSpace/zk-main/build/libs/zk-main-0.0.1.jar

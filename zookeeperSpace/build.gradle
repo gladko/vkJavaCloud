@@ -1,0 +1,9 @@
+tasks.register('buildImages') {
+    dependsOn ":zookeeperSpace:zk-main:buildDockerImage"
+    dependsOn ":zookeeperSpace:zk-translate:buildDockerImage"
+}
+
+tasks.register('pushImages') {
+    dependsOn ":zookeeperSpace:zk-main:pushDockerImage"
+    dependsOn ":zookeeperSpace:zk-translate:pushDockerImage"
+}

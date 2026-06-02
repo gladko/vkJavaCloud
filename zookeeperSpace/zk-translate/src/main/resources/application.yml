@@ -1,8 +1,8 @@
 spring:
   application:
-    name: zk-hello-service
+    name: zk-translate
 server:
-  port: 18000
+  port: 8080
 
 endpoints:
   restart:

@@ -27,7 +27,7 @@ public class ZookeeperClientController {
         this.registry = registry;
         this.zkDiscoveryClient = zkDiscoveryClient;
 
-        registry();
+        register();
 //        watch.setApplicationEventPublisher();
     }
 
@@ -40,12 +40,13 @@ public class ZookeeperClientController {
         return instances;
     }
 
-//    @GetMapping("/services")
-//    public List<String> getServices() {
-//    }
+    @GetMapping("/services")
+    public List<String> getServices() {
+        return zkDiscoveryClient.getServices();
+    }
 
     @PostMapping("/register")
-    public String registry() {
+    public String register() {
         ZookeeperRegistration zookeeperRegistration = ServiceInstanceRegistration.builder()
                 .name("xxx")
                 .address("xxx:123")
