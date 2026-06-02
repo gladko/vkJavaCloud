@@ -23,8 +23,8 @@ spec:
             - name: EUREKA_URL
               # service name
               value: "http://eureka:8761/eureka/"
-            - name: SPRING_APPLICATION_NAME
-              value: "eu-translate-service"
+#            - name: SPRING_APPLICATION_NAME
+#              value: "eu-translate"
             - name: SERVER_PORT
               value: "8080"
 ---

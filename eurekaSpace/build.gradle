@@ -1,0 +1,11 @@
+tasks.register('buildImages') {
+    dependsOn ":eurekaSpace:eureka:buildDockerImage"
+    dependsOn ":eurekaSpace:eu-main:buildDockerImage"
+    dependsOn ":eurekaSpace:eu-translate:buildDockerImage"
+}
+
+tasks.register('pushImages') {
+    dependsOn ":eurekaSpace:eureka:pushDockerImage"
+    dependsOn ":eurekaSpace:eu-main:pushDockerImage"
+    dependsOn ":eurekaSpace:eu-translate:pushDockerImage"
+}

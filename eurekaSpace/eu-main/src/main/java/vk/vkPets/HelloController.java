@@ -41,8 +41,8 @@ public class HelloController {
                 "<br>  /testresttemplate" +
                 "<br>  /discovery?service=" + translateServiceName +
                 "<br>  /choose?service=" + translateServiceName +
-                "<br>  /nodes" +
-                "<br>  /services?service=" + translateServiceName;
+                "<br>  /nodes?service=" + translateServiceName +
+                "<br>  /services";
     }
 
     @GetMapping("/testresttemplate")
@@ -55,7 +55,7 @@ public class HelloController {
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(translateServiceName);
         System.out.println("Found translate service instances: " + serviceInstances);
         if (serviceInstances.isEmpty()) {
-            return "Hello service not found. Register any instance";
+            return "translate-service not found. Register any instance";
         }
 
         int randomInstance = ThreadLocalRandom.current().nextInt(serviceInstances.size());
@@ -66,7 +66,7 @@ public class HelloController {
                 .retrieve()
                 .body(String.class);
 
-        System.out.println("Received response from translate service: " + translateServiceResponse);
+        System.out.println("Received response from translate-service: " + translateServiceResponse);
         return translateServiceResponse;
     }
 

@@ -4,6 +4,7 @@ plugins {
 
 containerPorts = ["18000:18000"]
 containerEnv = [
+        "SERVER_PORT": "18000",
         "SPRING_PROFILES_ACTIVE": "docker",
         "EUREKA_URL": "http://eureka:8761/eureka"
 ]

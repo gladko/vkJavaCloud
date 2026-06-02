@@ -1,9 +1,9 @@
 
 ## remove docker images
 ```bash
-docker rmi -f eureka-server
-docker rmi -f hello-service
-docker rmi -f foo-service
+docker rmi -f eureka
+docker rmi -f eu-main
+docker rmi -f eu-translate
 ```
 
 
@@ -15,11 +15,19 @@ docker compose down
 
 ## docker stack
 ```bash
+# start
 docker swarm init --advertise-addr 172.17.244.18
+docker stack deploy -c eurekaSpace/docker-compose.yml eureka-stack
 
-docker stack deploy -c eureka/docker-compose.yml eureka-stack
+# usage
+http://172.17.244.18:8761/
+curl 172.17.244.18:8080/services
+
+# It does NOT work. Probably because eu-translate service is registered with wrong IP.
+curl 172.17.244.18:8080/hi
+
+# stop
 docker stack rm eureka-stack
-
 docker swarm leave --force
 ```
 

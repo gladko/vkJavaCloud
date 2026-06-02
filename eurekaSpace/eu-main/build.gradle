@@ -2,10 +2,10 @@ plugins {
     id 'org.springframework.boot'
 }
 
-containerPorts = ["18100:18100"]
+containerPorts = ["8080:8080"]
 containerEnv = [
         "SPRING_PROFILES_ACTIVE": "docker",
-        "EUREKA_URL": "http://eureka-server:8761/eureka"
+        "EUREKA_URL": "http://eureka:8761/eureka"
 ]
 
 dependencies {

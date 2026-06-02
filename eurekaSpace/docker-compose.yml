@@ -1,13 +1,13 @@
 
 services:
-  eureka-server:
-    image: eureka-server
-    container_name: eureka-server
+  eureka:
+    image: localhost:5000/eureka
+    container_name: eureka
     ports:
       - "8761:8761"
 
-  hello-service:
-    image: eu-hello
+  eu-translate:
+    image: localhost:5000/eu-translate
     deploy:         # works only in swarm mode (docker stack deploy).
       replicas: 3
       restart_policy:
@@ -15,17 +15,18 @@ services:
     ports:
       - "18000:18000"
     depends_on:
-      - eureka-server
+      - eureka
     environment:
+      - SERVER_PORT=18000
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_URL=http://eureka:8761/eureka
 
-  foo-service:
-    image: eu-foo
+  eu-main:
+    image: localhost:5000/eu-main
     ports:
-      - "18100:18100"
+      - "8080:8080"
     depends_on:
-      - eureka-server
+      - eureka
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_URL=http://eureka:8761/eureka

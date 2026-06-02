@@ -12,11 +12,11 @@ pluginManagement {
 include 'config-server'
 include 'config-client'
 
-include 'etcd-sandbox'
+include 'etcdSpace:sandbox'
 include 'k8s-sandbox'
 
-//include 'eurekaSpace'
-include 'eureka', 'eu-sandbox', 'eu-main', 'eu-translate'
+
+//include 'eureka', 'eu-sandbox', 'eu-main', 'eu-translate'
 include 'zk-sandbox', 'zk-hazelcast', 'zk-main', 'zk-translate'
 include 'consul-sandbox', 'consul-main', 'consul-translate'
 
@@ -24,14 +24,18 @@ project(':consul-sandbox').projectDir = file('consulSpace/sandbox')
 project(':consul-main').projectDir = file('consulSpace/consul-main')
 project(':consul-translate').projectDir = file('consulSpace/consul-translate')
 
-project(':etcd-sandbox').projectDir = file('etcdSpace/sandbox')
+//project(':etcd-sandbox').projectDir = file('etcdSpace/sandbox')
 
 project(':k8s-sandbox').projectDir = file('k8sSpace/clientSandbox')
 
-project(':eureka').projectDir = file('eurekaSpace/eureka')
-project(':eu-sandbox').projectDir = file('eurekaSpace/sandbox')
-project(':eu-main').projectDir = file('eurekaSpace/eu-main')
-project(':eu-translate').projectDir = file('eurekaSpace/eu-translate')
+include 'eurekaSpace:eureka'
+include 'eurekaSpace:sandbox'
+include 'eurekaSpace:eu-main'
+include 'eurekaSpace:eu-translate'
+//project(':eureka').projectDir = file('eurekaSpace/eureka')
+//project(':eu-sandbox').projectDir = file('eurekaSpace/sandbox')
+//project(':eu-main').projectDir = file('eurekaSpace/eu-main')
+//project(':eu-translate').projectDir = file('eurekaSpace/eu-translate')
 
 project(':zk-sandbox').projectDir = file('zookeeperSpace/sandbox')
 project(':zk-hazelcast').projectDir = file('zookeeperSpace/hazelcastZkSpi')
