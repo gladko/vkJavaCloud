@@ -1,7 +1,7 @@
 spring:
   application:
-    name: consul-foo-service
+    name: consul-main
 server:
-  port: 18100
+  port: 8080
 
-hello-service-name: consul-hello-service
+translate-service-name: consul-translate

@@ -5,3 +5,5 @@ kill -9 $(ps -ef | grep "consulSpace/" | awk '{print $2}')
 kill -9 $(ps -ef | grep "eurekaSpace/" | awk '{print $2}')
 kill -9 $(ps -ef | grep "etcdSpace/" | awk '{print $2}')
 kill -9 $(ps -ef | grep " zookeeperSpace/" | awk '{print $2}')
+
+docker stop $(docker ps -q --filter ancestor=consul:1.15.4)

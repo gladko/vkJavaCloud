@@ -26,6 +26,8 @@ public class HelloController {
     private RestTemplate restTemplate;
     @Value("${translate-service-name}")
     private String translateServiceName;
+    @Value("${spring.application.name}")
+    private String spaceName;
 
     public HelloController(DiscoveryClient discoveryClient, RestClient.Builder restClientBuilder) {
         this.discoveryClient = discoveryClient;
@@ -35,7 +37,7 @@ public class HelloController {
 
     @GetMapping("/")
     public String index() {
-        return "Greetings from Eureka space main app!" +
+        return "Greetings from " + spaceName + " space main app!" +
                 "<br>Try the following endpoints:" +
                 "<br>  /hi" +
                 "<br>  /testresttemplate" +
@@ -71,7 +73,7 @@ public class HelloController {
     }
 
     @GetMapping("/discovery")
-    public String discover(@RequestParam String service) {
+    public String discovery(@RequestParam String service) {
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(service);
         System.out.println("Discovered: " + serviceInstances);
         return serviceInstances.stream()

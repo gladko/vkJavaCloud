@@ -13,9 +13,9 @@ import java.util.Arrays;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class FooApp {
+public class ConsulMainApp {
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(FooApp.class, args);
+        ApplicationContext ctx = SpringApplication.run(ConsulMainApp.class, args);
 
 //        printBeans(ctx);
     }

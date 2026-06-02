@@ -1,0 +1,9 @@
+tasks.register('buildImages') {
+    dependsOn ":consulSpace:consul-main:buildDockerImage"
+    dependsOn ":consulSpace:consul-translate:buildDockerImage"
+}
+
+tasks.register('pushImages') {
+    dependsOn ":consulSpace:consul-main:pushDockerImage"
+    dependsOn ":consulSpace:consul-translate:pushDockerImage"
+}
