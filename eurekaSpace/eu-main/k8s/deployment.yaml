@@ -1,40 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eu-translate
+  name: eu-main
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: eu-translate
+      app: eu-main
   template:
     metadata:
       labels:
-        app: eu-translate
+        app: eu-main
     spec:
       containers:
-        - name: eu-translate
-          image: localhost:5000/eu-translate:latest
+        - name: eu-main
+          image: localhost:5000/eu-main:latest
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: docker
             - name: EUREKA_URL
-              # service name
-              value: "http://eureka:8761/eureka/"
+              # DNS name
+              value: "http://eureka.default.svc.cluster.local:8761/eureka/"
 #            - name: SPRING_APPLICATION_NAME
-#              value: "eu-translate"
+#              value: "eu-main"
             - name: SERVER_PORT
               value: "8080"
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: eu-translate
-spec:
-  selector:
-    app: eu-translate
-  ports:
-    - port: 8080
-      targetPort: 8080

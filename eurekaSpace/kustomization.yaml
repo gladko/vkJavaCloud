@@ -1,0 +1,4 @@
+resources:
+  - eureka/k8s
+  - eu-main/k8s
+  - eu-translate/k8s

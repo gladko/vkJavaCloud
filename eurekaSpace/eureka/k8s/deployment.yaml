@@ -28,14 +28,3 @@ spec:
               value: "false"
             - name: EUREKA_CLIENT_FETCH_REGISTRY
               value: "false"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: eureka
-spec:
-  selector:
-    app: eureka
-  ports:
-    - port: 8761
-      targetPort: 8761
