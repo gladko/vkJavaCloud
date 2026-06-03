@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: zk-main
+  cloud:
+    discovery:
+      client:
+        simple:
+          enabled: false
+    kubernetes:
+      discovery:
+        enabled: true
+    loadbalancer:
+      enabled: true
+      server: http://discovery-server:8761
+
+server:
+  port: 8080
+
+translate-service-name: zk-translate

@@ -27,12 +27,9 @@ include 'zookeeperSpace:sandbox'
 include 'zookeeperSpace:zk-main'
 include 'zookeeperSpace:zk-translate'
 
-//project(':zk-sandbox').projectDir = file('zookeeperSpace/sandbox')
-//project(':zk-hazelcast').projectDir = file('zookeeperSpace/hazelcastZkSpi')
-//project(':zk-main').projectDir = file('zookeeperSpace/zk-main')
-//project(':zk-translate').projectDir = file('zookeeperSpace/zk-translate')
-
 include 'spring-config:config-server'
 include 'spring-config:client'
-//project(':config-server').projectDir = file('spring-config:config-server')
-//project(':config-client').projectDir = file('spring-config:client')
+
+include 'spring-k8s:discoveryserver'
+include 'spring-k8s:spring-k8s-main'
+include 'spring-k8s:spring-k8s-translate'
