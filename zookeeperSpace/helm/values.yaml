@@ -1,0 +1,15 @@
+zkMain:
+  image: localhost:5000/zk-main:latest
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+
+zkTranslate:
+  image: localhost:5000/zk-translate:latest
+  replicas: 3
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080

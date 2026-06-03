@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zk-translate
+spec:
+  replicas: {{ .Values.zkTranslate.replicas }}
+  selector:
+    matchLabels:
+      app: zk-translate
+  template:
+    metadata:
+      labels:
+        app: zk-translate
+    spec:
+      containers:
+        - name: zk-translate
+          image: {{ .Values.zkTranslate.image }}
+          ports:
+            - containerPort: {{ .Values.zkTranslate.service.port }}
+          env:
+            - name: SERVER_PORT
+              value: {{ .Values.zkTranslate.service.port }}

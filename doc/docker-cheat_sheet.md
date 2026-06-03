@@ -37,11 +37,6 @@ kill all running containers:            `docker kill $(docker ps -q)`
 delete all containers:                  `docker rm $(docker ps -a -q)`
 delete hello-world containers:         `docker rm $(docker ps -a -q  --filter ancestor=hello-world)`
 
-## k3s how-to
-```
-kubectl apply -f deployment.yaml
-kubectl get deployments
-```
 
 ## Kill all vkPets
 

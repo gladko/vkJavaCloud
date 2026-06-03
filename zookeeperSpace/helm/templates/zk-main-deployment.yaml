@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zk-main
+spec:
+  replicas: {{ .Values.zkMain.replicas }}
+  selector:
+    matchLabels:
+      app: zk-main
+  template:
+    metadata:
+      labels:
+        app: zk-main
+    spec:
+      containers:
+        - name: zk-main
+          image: {{ .Values.zkMain.image }}
+          ports:
+            - containerPort: {{ .Values.zkMain.service.port }}
+          env:
+            - name: SERVER_PORT
+              value: {{ .Values.zkMain.service.port }}

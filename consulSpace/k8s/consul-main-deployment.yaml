@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul-main
+  template:
+    metadata:
+      labels:
+        app: consul-main
+    spec:
+      containers:
+        - name: consul-main
+          image: localhost:5000/consul-main:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVER_PORT
+              value: "8080"

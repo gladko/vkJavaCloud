@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul-translate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul-translate
+  template:
+    metadata:
+      labels:
+        app: consul-translate
+    spec:
+      containers:
+        - name: consul-translate
+          image: localhost:5000/consul-translate:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVER_PORT
+              value: "8080"

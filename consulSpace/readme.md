@@ -19,3 +19,20 @@ https://spring.io/projects/spring-cloud-consul
 https://github.com/Ecwid/consul-api
 https://github.com/rickfast/consul-client  ARCHIVED
 https://github.com/vert-x3/vertx-consul-client
+
+
+
+## k8s
+```bash
+# From consulSpace directory
+kubectl apply -f k8s/
+kubectl delete -f k8s/
+
+kubectl get deployment
+kubectl get pods
+kubectl get svc
+```
+
+## to access Consul web UI
+`kubectl port-forward -n consul svc/consul 8500:8500`
+or expose the consul via NodePort
