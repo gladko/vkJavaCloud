@@ -1,0 +1,19 @@
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: k8s-dashboard-ingress
+#  namespace: kubernetes-dashboard
+#  annotations:
+#    ingress.kubernetes.io/ssl-redirect: "false"
+#spec:
+#  rules:
+#    - host: k8s-dashboard.com
+#    -  http:
+#        paths:
+#          - path: /k8s
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: kubernetes-dashboard
+#                port:
+#                  number: 80

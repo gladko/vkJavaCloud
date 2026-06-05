@@ -25,6 +25,8 @@ public class K8sSandbox {
     private static final String TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjUzYmpXMW9nbmZPUVRYRE04ZUlna2FTSnYyQUxBeVpUeGpOMzhSVjBXeWsifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzgwMDc2MDU0LCJpYXQiOjE3Nzk5ODk2NTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiNmJhM2FjODUtMDNkOS00NmQ0LWJjMzMtMjE2NTQ0NTY0NTQzIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMTgyNDY3ZjktMDc4ZS00NjkzLTg4ODEtZDYzYWI3MjA0MTk5In19LCJuYmYiOjE3Nzk5ODk2NTQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.NFK56pyjWFxtFy3V9whPLeRbZssXAu6l6ZV8yfHIOM03QQrkBnf6eIXCvX6RbShsd5-bPlNF-IrRL4S4mkJQaTDpFS3ZoJGhcms8rQGMkXSQwXfKhFC_HEj7tEoNE6mrHkfKbwFoMU1UUWAnyEF5IJgaZ9iB5EVwFaHEOBpsqV3vcyT7NV_XMwQsOwpuRAseeb_9N5VfSkiZxn0JQfHovZDVa15QYZNUftu3lJHnplwv9r59uZmLPcdA2t-fLuiQxYO5e_75Kt2NuKB299cwYojJzr7VA4xCC4ifK6fWBarU51DRcgRMv6IAuoeYioYQ2x4q0JAMeeiOc2YRclFIrw";
 
     private static CoreV1Api api;
+    private static final String serviceName = "just-hello";
+
 
     public static void main(String[] args) throws IOException, ApiException {
         api = initApiClient();
@@ -36,7 +38,7 @@ public class K8sSandbox {
 
         podInfo(api);
 
-        podsOfService("k8s-hello-service", "default");
+        podsOfService(serviceName, "default");
     }
 
     private static @NotNull CoreV1Api initApiClient() throws IOException {

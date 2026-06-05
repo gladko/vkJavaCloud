@@ -14,7 +14,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<html><head><title>HELLO</title></head>", "utf-8"))
         self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
         self.wfile.write(bytes("<body>", "utf-8"))
-        self.wfile.write(bytes("<p>This is an HELLO service.</p>", "utf-8"))
+        self.wfile.write(bytes("<p>This is an JUST HELLO service.</p>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
 

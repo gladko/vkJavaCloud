@@ -20,4 +20,4 @@ COPY . /app/
 EXPOSE 8080
 
 # Command to run your app
-CMD ["python", "helloService.py"]
+CMD ["python", "justHello.py"]
