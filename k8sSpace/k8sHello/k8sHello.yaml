@@ -32,5 +32,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80          # service port
-      targetPort: 8080  # container port your app listens on
+      targetPort: 8080  # container port your app listens on (must match to containers.ports.containerPort)
   type: NodePort
