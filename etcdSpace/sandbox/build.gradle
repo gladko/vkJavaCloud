@@ -1,4 +1,5 @@
-
+import com.bmuschko.gradle.docker.tasks.image.*
+import org.codehaus.groovy.runtime.GStringImpl
 
 dependencies {
     implementation 'io.etcd:jetcd-core:0.8.6'
@@ -14,4 +15,43 @@ dependencies {
 //    implementation platform('org.testcontainers:testcontainers-bom:2.0.2') //import bom
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+}
+
+containerImage = "localhost:5000/etcd-sandbox:latest"
+containerPorts = ["7777:7777"]
+containerEnv = [
+        "ETCD_ENDPOINT": "http://vk-etcd:2379",
+]
+
+task createDockerfile(type: Dockerfile) {
+    dependsOn jar
+
+    from 'openjdk:17-jdk-alpine'
+
+    copyFile 'app.jar', '/app/app.jar'
+    copyFile 'libs', '/app/libs'
+
+    workingDir '/app'
+    entryPoint 'java', '-cp', 'app.jar:libs/*', 'vk.vkPets.server.Node', 'container-mode'
+}
+
+task prepareDockerContext(type: Copy) {
+    dependsOn jar
+
+    from("$buildDir/libs") {
+        include "*.jar"
+        rename { "app.jar" }
+    }
+
+    from(configurations.runtimeClasspath) {
+        into "libs"
+    }
+
+    into("$buildDir/docker")
+}
+
+tasks.named('buildDockerImage', DockerBuildImage) {
+    dependsOn createDockerfile, prepareDockerContext
+    inputDir = file("$buildDir/docker")
+    images.add("${project.containerImage}")
 }

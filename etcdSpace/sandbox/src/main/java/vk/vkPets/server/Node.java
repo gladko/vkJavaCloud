@@ -9,23 +9,46 @@ import io.etcd.jetcd.support.CloseableClient;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vk.vkPets.server.misc.JsonObjectMapper;
+import vk.vkPets.server.misc.LeaveFailedException;
+import vk.vkPets.server.misc.NodeData;
+import vk.vkPets.server.misc.TestServer;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Node implements AutoCloseable {
 
     public static void main(String[] args) throws Exception {
-        Node node = new Node(NodesMain.ETCD_ENDPOINT);
+        if (args.length != 0 && "container-mode".equals(args[0])) {
+            startInContainerMode();
+        } else {
+            Node node = new Node(NodesMain.ETCD_ENDPOINT);
 //        Node node = new Node(NodesMain.ETCD_PROXY_ENDPOINT, 10);
-        node.join();
+            node.join();
+        }
 
         Thread.sleep(Long.MAX_VALUE);
     }
+
+    private static void startInContainerMode() throws Exception {
+        Observer.TRY_CONNECT = true;
+
+        String etcdHost = System.getenv("ETCD_HOST");
+        String etcdEndpoint = etcdHost != null ? ("http://" + etcdHost + ":2379") :
+                System.getenv().getOrDefault("ETCD_ENDPOINT", "http://localhost:2379");
+
+        Node node = new Node(List.of(URI.create(etcdEndpoint)));
+
+        if (Observer.TRY_CONNECT) {
+            TestServer.openServerSocket();
+        }
+        node.join();
+    }
+
 
     private final Logger logger;
 
@@ -34,7 +57,6 @@ public class Node implements AutoCloseable {
     public static final String NODES_PREFIX = "/nodes/";
 
     private final NodeData nodeData;
-
     private final Client etcdClient;
     private final Observer observer;
 
@@ -49,8 +71,8 @@ public class Node implements AutoCloseable {
 
     public Node(List<URI> endpoints, long leaseTtl) throws Exception {
         this.leaseTtl = leaseTtl;
-        nodeData = new NodeData(UUID.randomUUID());
-        logger = LoggerFactory.getLogger(nodeData.getUuid().toString());
+        nodeData = new NodeData();
+        logger = LoggerFactory.getLogger(nodeData.uuid().toString());
 
         logger.info("Connecting to etcd on the following endpoints: {}", endpoints);
         etcdClient = Client.builder()
@@ -66,7 +88,7 @@ public class Node implements AutoCloseable {
             putMetadata();
             logger.info("Join complete");
         } catch (Exception e) {
-            throw new Exception(String.format("Node %s failed to join.", nodeData.getUuid()), e);
+            throw new Exception(String.format("Node %s failed to join.", nodeData.uuid()), e);
         }
     }
 
@@ -97,14 +119,8 @@ public class Node implements AutoCloseable {
     private void putMetadata() throws Exception {
         logger.info("Putting node metadata");
         etcdClient.getKVClient().put(
-                ByteSequence.from(
-                        NODES_PREFIX + nodeData.getUuid(),
-                        StandardCharsets.UTF_8
-                ),
-                ByteSequence.from(
-                        JsonObjectMapper.write(nodeData),
-                        StandardCharsets.UTF_8
-                ),
+                ByteSequence.from(NODES_PREFIX + nodeData.uuid(), StandardCharsets.UTF_8),
+                ByteSequence.from(JsonObjectMapper.write(nodeData), StandardCharsets.UTF_8),
                 PutOption.builder().withLeaseId(leaseId).build()
         ).get(OPERATION_TIMEOUT, TimeUnit.SECONDS);
     }
@@ -130,8 +146,10 @@ public class Node implements AutoCloseable {
         return observer.getClusterMembers();
     }
 
+
+
     @Override
-    public void close(){
+    public void close() {
         try {
             leave();
         } catch (LeaveFailedException e) {

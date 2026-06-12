@@ -10,16 +10,21 @@ import io.etcd.jetcd.options.WatchOption;
 import io.etcd.jetcd.watch.WatchEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vk.vkPets.server.misc.JsonObjectMapper;
+import vk.vkPets.server.misc.NodeData;
+import vk.vkPets.server.misc.TestClient;
 
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 public class Observer implements AutoCloseable {
+    static boolean TRY_CONNECT = false;
+
     public static void main(String[] args) throws Exception {
         Client build = Client.builder().endpoints(NodesMain.ETCD_ENDPOINT).build();
         new Observer(build, LoggerFactory.getLogger(Observer.class));
@@ -54,7 +59,7 @@ public class Observer implements AutoCloseable {
 
         for (KeyValue kv : response.getKvs()) {
             NodeData nodeData = JsonObjectMapper.read(kv.getValue().toString(StandardCharsets.UTF_8));
-            clusterMembers.put(nodeData.getUuid(), nodeData);
+            clusterMembers.put(nodeData.uuid(), nodeData);
         }
         logger.info("--> LOADED {}", getClusterMembers());
         return response.getHeader().getRevision();
@@ -85,7 +90,12 @@ public class Observer implements AutoCloseable {
                     String nodeValue = watchEvent.getKeyValue().getValue().toString(StandardCharsets.UTF_8);
                     NodeData nodeData = JsonObjectMapper.read(nodeValue);
                     logger.info("on PUT {}", nodeData);
-                    clusterMembers.put(nodeData.getUuid(), nodeData);
+                    clusterMembers.put(nodeData.uuid(), nodeData);
+
+                    if (TRY_CONNECT) {
+                        ping(nodeData);
+                        TestClient.testCall(nodeData);
+                    }
                 }
                 case DELETE -> {
                     String etcdKey = watchEvent.getKeyValue().getKey().toString(StandardCharsets.UTF_8);
@@ -100,8 +110,19 @@ public class Observer implements AutoCloseable {
         }
     }
 
+    // FYI: this is not reliable in K8s b/se ICMP ping is blocked in most clusters
+    private void ping(NodeData nodeData) {
+        try {
+            InetAddress addr = InetAddress.getByName(nodeData.host());
+            boolean reachable = addr.isReachable(2000);
+            System.out.println("Reachable " + nodeData.host() + ": " + reachable);
+        } catch (Exception e) {
+            System.out.println("Can't ping " + nodeData.host() + ": " + e);
+        }
+    }
+
     private String extractNodeUuid(String etcdKey) {
-        return etcdKey.replaceAll(Pattern.quote(Node.NODES_PREFIX), "");
+        return etcdKey.substring(Node.NODES_PREFIX.length());
     }
 
     @Override

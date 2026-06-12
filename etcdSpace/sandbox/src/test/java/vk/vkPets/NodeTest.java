@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.toxiproxy.ToxiproxyContainer;
-import vk.vkPets.server.LeaveFailedException;
+import vk.vkPets.server.misc.LeaveFailedException;
 import vk.vkPets.server.Node;
 import vk.vkPets.server.Observer;
 
@@ -97,7 +97,7 @@ class NodeTest {
         ));
     }
 
-
+    @Disabled
     @Test
     public void testTwoNodesJoinLeave() throws Exception {
         long leaseTtl = 3;

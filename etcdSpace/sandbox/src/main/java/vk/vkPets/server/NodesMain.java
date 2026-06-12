@@ -25,7 +25,8 @@ public class NodesMain {
         Node node2 = new Node(ETCD_ENDPOINT);
         node2.join();
 
-        Node node3 = new Node(ETCD_PROXY_ENDPOINT);
+//        Node node3 = new Node(ETCD_PROXY_ENDPOINT);
+        Node node3 = new Node(ETCD_ENDPOINT);
         node3.join();
 
         Thread.sleep(10_000);

@@ -94,5 +94,31 @@ curl localhost:8066
 /go/bin/toxiproxy-cli toxic add -t latency -a latency=3000 xxx
 ```
 
+## RUN etcd with toxiproxy
+```bash
+# 1. start etcd
+docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
+  --listen-client-urls http://0.0.0.0:2379 \
+  --advertise-client-urls http://0.0.0.0:2379
+  
+# 2. start toxiproxy
+docker run -p 8474:8474 -d --name toxiproxy --net=host shopify/toxiproxy
 
+# 3. configure toxiproxy
+#   3.1 go into toxiproxy container  
+docker exec -it toxiproxy sh
+#   3.2 in toxiproxy-container create proxy rule
+/go/bin/toxiproxy-cli  create -l localhost:12379 -u localhost:2379 etcd-proxy
 
+# 4. in another terminal or in web browser validate that the rule works
+curl http://localhost:12379/version
+
+# 5. modify the proxy rule
+/go/bin/toxiproxy-cli toxic add etcd-proxy -t latency -n myToxic -a latency=3000 
+/go/bin/toxiproxy-cli toxic remove -n myToxic etcd-proxy
+
+/go/bin/toxiproxy-cli delete etcd-proxy
+
+# 6. stop and remove toxiproxy container
+docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
+```

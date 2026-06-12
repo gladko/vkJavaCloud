@@ -1,24 +1,26 @@
 
-## Install docker image
-[install](https://github.com/etcd-io/etcd/releases/tag/v3.6.7)
+
+./gradlew  :etcdSpace:sandbox:buildDockerImage
 
 
-## Launch etcd on Windows:
+## Launch vk-etcd and sandbox in docker wit custom network:
 ```bash
-ETCD_HOME=~/workspace/tools/etcd-v3.6.7-windows-amd64
-exec $ETCD_HOME/etcd
-# ~/workspace/tools/etcd-v3.6.7-windows-amd64/etcd
+#docker run -d --network vkcloud-manual-network -p 2379:2379 -p 2380:2380 vk-etcd
+docker run -d --name vk-etcd --network vkcloud-manual-network -p 2379:2379 -p 2380:2380 localhost:5000/vk-etcd:latest
+
+docker run --network vkcloud-manual-network -p 7777:7777 -e ETCD_ENDPOINT="http://vk-etcd:2379" localhost:5000/etcd-sandbox:latest
+
+# check connectivity
+# docker exec -it serviceA ping serviceB
+docker run --network vkcloud-manual-network -it alpine sh
+# then 
+ping vk-etcd
+# dig ... 
+docker exec <CONTAINER-NAME> ping vk-etcd
+
+./gradlew  :etcdSpace:sandbox:startContainer
 ```
-Then check...
-From another terminal, use etcdctl to set a key:
-```bash
-./etcdctl put greeting "Hello, etcd"
-OK
-```
-Then kill...
-```bash
-kill -9 $(ps | grep "/tools/etcd" | awk '{print $3}')
-```
+
 
 ## Launch etcd with docker:
 Start simple
@@ -54,46 +56,6 @@ rm -rf /tmp/etcd-data.tmp && mkdir -p /tmp/etcd-data.tmp && \
   --logger zap \
   --log-outputs stderr
 ```
-Then check
-```bash
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcd --version
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl version
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdutl version
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl endpoint health
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl put foo bar
-docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl get foo
-```
-
-
-
-## RUN with toxiproxy
-```bash
-# 1. start etcd
-docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
-  --listen-client-urls http://0.0.0.0:2379 \
-  --advertise-client-urls http://0.0.0.0:2379
-  
-# 2. start toxiproxy
-docker run -p 8474:8474 -d --name toxiproxy --net=host shopify/toxiproxy
-
-# 3. configure toxiproxy
-#   3.1 go into toxiproxy container  
-docker exec -it toxiproxy sh
-#   3.2 in toxiproxy-container create proxy rule
-/go/bin/toxiproxy-cli  create -l localhost:12379 -u localhost:2379 etcd-proxy
-
-# 4. in another terminal or in web browser validate that the rule works
-curl http://localhost:12379/version
-
-# 5. modify the proxy rule
-/go/bin/toxiproxy-cli toxic add etcd-proxy -t latency -n myToxic -a latency=3000 
-/go/bin/toxiproxy-cli toxic remove -n myToxic etcd-proxy
-
-/go/bin/toxiproxy-cli delete etcd-proxy
-
-# 6. stop and remove toxiproxy container
-docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
-```
 
 
 ## Java client
@@ -108,5 +70,5 @@ docker rm -f $(docker ps -q --filter ancestor=shopify/toxiproxy)
 [API](https://etcd.io/docs/v3.4/dev-guide/api_grpc_gateway)
 ```bash
 curl http://localhost:2379/version
-curl -L http://localhost:2379/v3/kv/put   -X POST -d '{"key": "Zm9v", "value": "YmFy"}'
+curl -L http://localhost:2379/v3/kv/put   -X POST -d '{"key": "X", "value": "Y"}'
 ```

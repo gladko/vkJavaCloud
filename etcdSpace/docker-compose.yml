@@ -1,0 +1,24 @@
+
+services:
+  vk-etcd:
+    image: localhost:5000/vk-etcd
+    container_name: vk-etcd
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
+  etcd-sandbox:
+    image: localhost:5000/etcd-sandbox:latest
+    deploy:
+      replicas: 3  # works only in swarm mode (docker stack deploy).
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "7777:7777"
+    depends_on:
+      - vk-etcd
+    environment:
+      - ETCD_ENDPOINT=http://vk-etcd:2379
+
+  xxx:
+    image: alpine

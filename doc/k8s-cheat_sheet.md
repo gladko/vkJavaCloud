@@ -38,10 +38,10 @@ The 3xxxx is the NodePort on your local machine (WSL). Open in your browser or `
 
 ## Delete
 ```bash
-kubectl delete -n default service k8s-hello-service
-kubectl delete -n default deployment vk-cloud-hello
+kubectl delete -n default service FOO
+kubectl delete -n default deployment FOO
 
-kubectl delete deployment vk-cloud-hello
+kubectl delete all --all -n default
 ```
 
 
