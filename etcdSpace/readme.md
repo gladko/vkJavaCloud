@@ -1,6 +1,7 @@
 
 
 ./gradlew  :etcdSpace:sandbox:buildDockerImage
+./gradlew  :etcdSpace:sandbox:pushDockerImage
 
 
 ## Launch vk-etcd and sandbox in docker wit custom network:
@@ -21,6 +22,14 @@ docker exec <CONTAINER-NAME> ping vk-etcd
 ./gradlew  :etcdSpace:sandbox:startContainer
 ```
 
+## Launch vk-etcd and sandbox in k8s
+```bash
+kubectl apply -f k8s
+kubectl delete -f k8s
+
+kubectl get pods -l app=vk-etcd
+kubectl logs <pod-name>
+```
 
 ## Launch etcd with docker:
 Start simple

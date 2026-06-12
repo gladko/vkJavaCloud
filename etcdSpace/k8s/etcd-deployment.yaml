@@ -30,3 +30,18 @@ spec:
       volumes:
         - name: etcd-data
           emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vk-etcd
+spec:
+  selector:
+    app: vk-etcd
+  ports:
+    - name: xxx
+      port: 2379
+      targetPort: 2379
+    - name: yyy
+      port: 2380
+      targetPort: 2380
