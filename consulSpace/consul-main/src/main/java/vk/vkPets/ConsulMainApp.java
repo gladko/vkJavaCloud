@@ -17,6 +17,21 @@ public class ConsulMainApp {
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(ConsulMainApp.class, args);
 
+        HelloController helloController = ctx.getBean(HelloController.class);
+        new Thread(() -> {
+            while (true) {
+                try {
+                    System.out.println(helloController.hi());
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
 //        printBeans(ctx);
     }
 

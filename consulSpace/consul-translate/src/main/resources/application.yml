@@ -6,6 +6,13 @@ spring:
       host: localhost
       port: 8500
 
+# workaround of BeanCreationException: Error creating bean with name 'processorMetrics'. Appears on WSL in docker swarm
+# make sure a correct linux distro is used in Dockerfile
+management:
+  metrics:
+    enable:
+      processor: false
+
 server:
   port: 8080
 

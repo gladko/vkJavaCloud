@@ -61,3 +61,10 @@ Show containers attached to a specific Docker network
  docker network inspect vkcloud-manual-network \
   --format '{{ range $id, $c := .Containers }}{{ $c.Name }} {{ end }}'
 ```
+
+# check if monitoring available in docker linux distro
+```bash
+cat /sys/fs/cgroup/cpu.max
+cat /sys/fs/cgroup/cgroup.controllers
+cat /proc/self/mountinfo
+```

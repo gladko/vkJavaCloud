@@ -4,4 +4,11 @@ spring:
 server:
   port: 8080
 
+# workaround of BeanCreationException: Error creating bean with name 'processorMetrics'. Appears on WSL in docker
+# make sure a correct linux distro is used in Dockerfile
+management:
+  metrics:
+    enable:
+      processor: false
+
 translate-service-name: consul-translate

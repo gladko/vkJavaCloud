@@ -44,7 +44,7 @@ public class TranslateApp {
         return "Greetings from Translate app!" +
                 "<br>Try the following endpoints" +
                 "<br>  /ping" +
-                "<br>  /translate" +
+                "<br>  /translate?input=XXX" +
                 "<br>  /prop?name=X";
     }
 
@@ -55,7 +55,7 @@ public class TranslateApp {
     }
 
     @GetMapping("/translate")
-    public String translate(String input) throws Exception {
+    public String translate(@RequestParam String input) throws Exception {
         System.out.println("requested " + input + ", instance : " + INSTANCE_UUID);
         return DICTIONARY.getOrDefault(input, "UNKNOWN");
     }
