@@ -1,16 +1,14 @@
 services:
   my-consul:
-    image: consul:1.15.4
+    image: hashicorp/consul:2.0.2
     restart: always
     ports:
       - "8500:8500"
 
   consul-translate:
     image: localhost:5000/consul-translate
-    deploy: # works only in swarm mode (docker stack deploy).
+    deploy:
       replicas: 3
-      restart_policy:
-        condition: on-failure
     ports:
       - "18000:18080"
     environment:

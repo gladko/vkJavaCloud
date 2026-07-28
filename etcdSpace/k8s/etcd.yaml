@@ -14,11 +14,13 @@ spec:
     spec:
       containers:
         - name: etcd
-          image: localhost:5000/vk-etcd:latest
+#          image: localhost:5000/vk-etcd:latest
+          image: gcr.io/etcd-development/etcd:v3.6.7
           ports:
             - containerPort: 2379
             - containerPort: 2380
           args:
+            - /usr/local/bin/etcd
             - --data-dir=/etcd-data
             - --name=default
             - --listen-client-urls=http://0.0.0.0:2379

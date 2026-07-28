@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: etcd-sandbox
-          image: localhost:5000/etcd-sandbox:latest
+          image: etcd-sandbox:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 7777
           env:

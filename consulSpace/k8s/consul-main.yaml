@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: consul-main
-          image: localhost:5000/consul-main:latest
+          image: consul-main:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env:
@@ -22,3 +23,16 @@ spec:
               value: "8080"
             - name: SPRING_CLOUD_CONSUL_HOST
               value: consul
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-main
+spec:
+  type: NodePort
+  selector:
+    app: consul-main
+  ports:
+    - port: 8080
+      targetPort: 8080

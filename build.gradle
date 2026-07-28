@@ -70,7 +70,7 @@ subprojects {
 
     def containerNetwork = "vkcloud-manual-network" // must be created via "docker network create <NAME>"
     ext.containerName = "${project.name}"
-    ext.containerImage = "localhost:5000/${project.name}:latest"
+    ext.containerImage = "${ext.containerName}:latest"
     ext.containerPorts = []   // Default empty, overridden in subprojects
     ext.containerEnv = [:]   // environment variables
 
@@ -80,13 +80,32 @@ subprojects {
         images.add("${project.containerImage}")
     }
 
+    // pushes image to docker registry
     tasks.register('pushDockerImage', com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
         dependsOn buildDockerImage
-        images.add("${project.containerImage}")
+        images.add("localhost:5000/${project.containerImage}")
+    }
+
+    tasks.register('saveImage', com.bmuschko.gradle.docker.tasks.image.DockerSaveImage) {
+        dependsOn buildDockerImage
+        images.add("${project.containerName}:latest")
+        destFile = file("$buildDir/${project.containerName}.tar")
+    }
+
+    // exec before run: export SUDO_PASS="your-password"
+    tasks.register('importImageToK3s', Exec) {
+        dependsOn tasks.named('saveImage')
+
+        def sudoPass = System.getenv("SUDO_PASS")
+        if (!sudoPass) {
+            throw new GradleException("SUDO_PASS environment variable is not set. Exec 'export SUDO_PASS=...'")
+        }
+
+        commandLine "bash", "-c", "echo ${sudoPass} | sudo -S k3s ctr images import $buildDir/${project.containerName}.tar"
     }
 
     tasks.register('createContainer', com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer) {
-        dependsOn tasks.named('pushDockerImage')
+        dependsOn tasks.named('buildDockerImage')
         targetImageId project.containerImage
         containerName = project.containerName
         hostConfig.portBindings = project.containerPorts

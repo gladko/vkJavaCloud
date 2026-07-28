@@ -58,8 +58,8 @@ docker swarm leave --force
 ## k8s
 Result: so so
 ```bash
-# build and push images to local registry
-../gradlew pushImages 
+# build and import images to k3s
+../gradlew importImages
 
 kubectl apply -f k8s/
 kubectl delete -f k8s/

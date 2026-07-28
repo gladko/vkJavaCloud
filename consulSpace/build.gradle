@@ -7,3 +7,8 @@ tasks.register('pushImages') {
     dependsOn ":consulSpace:consul-main:pushDockerImage"
     dependsOn ":consulSpace:consul-translate:pushDockerImage"
 }
+
+tasks.register('importImages') {
+    dependsOn ":consulSpace:consul-main:importImageToK3s"
+    dependsOn ":consulSpace:consul-translate:importImageToK3s"
+}

@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: consul-translate
-          image: localhost:5000/consul-translate:latest
+          image: consul-translate:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env:
@@ -22,3 +23,16 @@ spec:
               value: "8080"
             - name: SPRING_CLOUD_CONSUL_HOST
               value: consul
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-translate
+spec:
+  type: NodePort
+  selector:
+    app: consul-translate
+  ports:
+    - port: 8080
+      targetPort: 8080

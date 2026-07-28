@@ -20,7 +20,7 @@ include 'eurekaSpace:sandbox'
 include 'eurekaSpace:eu-main'
 include 'eurekaSpace:eu-translate'
 
-include 'k8sSpace:clientSandbox'
+include 'k8sSpace:k8sSandbox'
 
 include 'zookeeperSpace:hazelcastZkSpi'
 include 'zookeeperSpace:sandbox'

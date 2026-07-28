@@ -17,7 +17,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 }
 
-containerImage = "localhost:5000/etcd-sandbox:latest"
+containerName = "etcd-sandbox"
 containerPorts = ["7777:7777"]
 containerEnv = [
         "ETCD_ENDPOINT": "http://vk-etcd:2379",

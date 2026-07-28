@@ -2,14 +2,20 @@
 
 ./gradlew  :etcdSpace:sandbox:buildDockerImage
 ./gradlew  :etcdSpace:sandbox:pushDockerImage
+./gradlew  :etcdSpace:sandbox:importImageToK3s
 
 
-## Launch vk-etcd and sandbox in docker wit custom network:
+## Launch vk-etcd and sandbox in docker with custom network:
 ```bash
 #docker run -d --network vkcloud-manual-network -p 2379:2379 -p 2380:2380 vk-etcd
-docker run -d --name vk-etcd --network vkcloud-manual-network -p 2379:2379 -p 2380:2380 localhost:5000/vk-etcd:latest
+docker run -d --name vk-etcd --network vkcloud-manual-network \
+ -p 2379:2379 -p 2380:2380 \
+ localhost:5000/vk-etcd:latest
 
-docker run --network vkcloud-manual-network -p 7777:7777 -e ETCD_ENDPOINT="http://vk-etcd:2379" localhost:5000/etcd-sandbox:latest
+docker run --network vkcloud-manual-network \
+  -p 7777:7777 \
+  -e ETCD_ENDPOINT="http://vk-etcd:2379" \
+  localhost:5000/etcd-sandbox:latest
 
 # check connectivity
 # docker exec -it serviceA ping serviceB
@@ -34,7 +40,8 @@ kubectl logs <pod-name>
 ## Launch etcd with docker:
 Start simple
 ```bash
-docker run -d -p 2379:2379 -p 2380:2380 gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
+docker run -d -p 2379:2379 -p 2380:2380 \
+  gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcd \
   --listen-client-urls http://0.0.0.0:2379 \
   --advertise-client-urls http://0.0.0.0:2379
 ```

@@ -10,3 +10,11 @@
 
 https://github.com/spring-cloud/spring-cloud-kubernetes
 
+## Current state
+|              | consul                                                     | etcd | eureka | zookeeper | k8s  |
+|--------------|------------------------------------------------------------| ---- | ----- | --------- |------|
+| build / test | works                                                      |  |  |  |  |
+| runscenario  | works                                                        |  |  |  |  |
+| docker       | works                                                        |  |  |  |  |
+| compose      | half: only one instance of translate service is registered |  |  |  |  |
+| k8s          | so so                                                      |  |  |  |  |

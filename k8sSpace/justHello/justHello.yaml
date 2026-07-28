@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: just-hello
-          image: localhost:5000/just-hello:latest
+          image: just-hello:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
 ---

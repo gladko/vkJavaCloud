@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: consul
-          image: hashicorp/consul:latest
+          image: hashicorp/consul:2.0.2
           args:
             - "agent"
             - "-server"
