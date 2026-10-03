@@ -37,6 +37,10 @@ docker push vladika/just-hello:latest
 docker tag just-hello localhost:5000/just-hello:latest
 docker push localhost:5000/just-hello:latest
 
+## restart
+kubectl rollout restart deployment my-app
+kubectl rollout status deployment my-app
+
 ## Client examples
 See com.hazelcast.kubernetes.KubernetesClient
 and com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy

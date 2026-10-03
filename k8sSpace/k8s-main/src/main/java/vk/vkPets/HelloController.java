@@ -2,17 +2,24 @@ package vk.vkPets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class HelloController {
-
+    private final Map<String, Integer> results = new ConcurrentHashMap<>();
+    private final AtomicInteger requestCounter = new AtomicInteger();
+    private final AtomicBoolean logRequestResults = new AtomicBoolean();
     private final RestClient client;
     private String translateServiceAddress;
     @Value("${spring.application.name}")
@@ -25,6 +32,9 @@ public class HelloController {
     {
         this.client = client;
         this.translateServiceAddress = translateServiceAddress;
+        executorService.scheduleAtFixedRate(() -> {
+            System.out.println(new Date() + ": " + results);
+        }, 10, 10, TimeUnit.SECONDS);
     }
 
 
@@ -38,7 +48,7 @@ public class HelloController {
 
     @GetMapping("/testCall")
     public String testCall() {
-        System.out.println("on testCall");
+//        System.out.println("on testCall");
 //        return restTemplate.getForObject(translateServiceAddress + "/ping", String.class);
         return client.get()
                 .uri(translateServiceAddress + "/ping")
@@ -46,16 +56,26 @@ public class HelloController {
                 .body(String.class);
     }
 
+    @GetMapping("/log")
+    public String log(@RequestParam(defaultValue = "false") boolean enabled) {
+        logRequestResults.set(enabled);
+        return "ok";
+    }
+
     @GetMapping("/go")
     public String go() {
         executorService.scheduleAtFixedRate(() -> {
             try {
                 String result = testCall();
-                System.out.println(new Date().toString() + ": " + result);
+                results.merge(result, 1, Integer::sum);
+
+                if (logRequestResults.get() && requestCounter.incrementAndGet() % 13 == 0) {
+                    System.out.println(new Date() + ": " + result);
+                }
             } catch (Throwable t) {
                 t.printStackTrace();
             }
-        }, 1, 1, TimeUnit.SECONDS);
+        }, 10, 10, TimeUnit.MILLISECONDS);
 
         return "ok";
     }
