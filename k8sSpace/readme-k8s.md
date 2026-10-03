@@ -17,10 +17,17 @@ kubectl apply -f justHello
 kubectl delete -f justHello
 ```
 
-## importing docker image to k3s (containerd)
+## importing docker image to k3s (containerd) through .tar file
 docker save just-hello:latest -o just-hello.tar
 sudo k3s ctr images import just-hello.tar
 sudo k3s ctr images ls | grep just-hello
+
+## importing docker image to k3s via gradle
+./gradlew :k8sSpace:k8s-main:importImageToK3s
+./gradlew :k8sSpace:k8s-translate:importImageToK3s
+
+## get k3s images
+sudo k3s ctr images ls -q
 
 ## Push image to Docker Hub (example)
 docker tag just-hello vladika/just-hello:latest

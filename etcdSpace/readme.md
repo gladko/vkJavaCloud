@@ -5,7 +5,7 @@
 ./gradlew  :etcdSpace:sandbox:importImageToK3s
 
 
-## Launch vk-etcd and sandbox in docker with custom network:
+## Launch vk-etcd and sandbox in plain docker with custom network:
 ```bash
 #docker run -d --network vkcloud-manual-network -p 2379:2379 -p 2380:2380 vk-etcd
 docker run -d --name vk-etcd --network vkcloud-manual-network \

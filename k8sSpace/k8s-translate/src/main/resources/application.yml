@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: k8s-translate
+server:
+  port: 8081

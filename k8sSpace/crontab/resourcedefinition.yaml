@@ -20,9 +20,9 @@ spec:
             spec:
               type: object
               properties:
-                cronSpec:
+                cronStmt:
                   type: string
-                image:
+                iconPath:
                   type: string
                 replicas:
                   type: integer

@@ -3,5 +3,5 @@ kind: CronTab
 metadata:
   name: my-new-cron-object
 spec:
-  cronSpec: "* * * * */5"
-  image: my-awesome-cron-image
+  cronStmt: "* * * * */5"
+  iconPath: my-awesome-cron-icon.jpeg

@@ -1,4 +1,4 @@
-package vk.vkPets;
+package vk.vkPets.k8s;
 
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
@@ -8,8 +8,7 @@ import io.kubernetes.client.openapi.models.V1ObjectMeta;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1PodList;
 import io.kubernetes.client.openapi.models.V1Service;
-import io.kubernetes.client.util.ClientBuilder;
-import io.kubernetes.client.util.credentials.AccessTokenAuthentication;
+import io.kubernetes.client.util.Config;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -17,12 +16,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class K8sSandbox {
+public class K8sDiscovery {
     // todo: remove it! there must be another way to auth the client.
     //   see certificates in /etc/rancher/k3s/k3s.yaml
     // created via 'kubectl -n kubernetes-dashboard create token admin-user --duration=24h'
     // check via 'curl -k -H "Authorization: Bearer $TOKEN" https://127.0.0.1:6443/api'
-    private static final String TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjUzYmpXMW9nbmZPUVRYRE04ZUlna2FTSnYyQUxBeVpUeGpOMzhSVjBXeWsifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzgwMDc2MDU0LCJpYXQiOjE3Nzk5ODk2NTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiNmJhM2FjODUtMDNkOS00NmQ0LWJjMzMtMjE2NTQ0NTY0NTQzIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMTgyNDY3ZjktMDc4ZS00NjkzLTg4ODEtZDYzYWI3MjA0MTk5In19LCJuYmYiOjE3Nzk5ODk2NTQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.NFK56pyjWFxtFy3V9whPLeRbZssXAu6l6ZV8yfHIOM03QQrkBnf6eIXCvX6RbShsd5-bPlNF-IrRL4S4mkJQaTDpFS3ZoJGhcms8rQGMkXSQwXfKhFC_HEj7tEoNE6mrHkfKbwFoMU1UUWAnyEF5IJgaZ9iB5EVwFaHEOBpsqV3vcyT7NV_XMwQsOwpuRAseeb_9N5VfSkiZxn0JQfHovZDVa15QYZNUftu3lJHnplwv9r59uZmLPcdA2t-fLuiQxYO5e_75Kt2NuKB299cwYojJzr7VA4xCC4ifK6fWBarU51DRcgRMv6IAuoeYioYQ2x4q0JAMeeiOc2YRclFIrw";
+//    private static final String TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjUzYmpXMW9nbmZPUVRYRE04ZUlna2FTSnYyQUxBeVpUeGpOMzhSVjBXeWsifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzgwMDc2MDU0LCJpYXQiOjE3Nzk5ODk2NTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiNmJhM2FjODUtMDNkOS00NmQ0LWJjMzMtMjE2NTQ0NTY0NTQzIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMTgyNDY3ZjktMDc4ZS00NjkzLTg4ODEtZDYzYWI3MjA0MTk5In19LCJuYmYiOjE3Nzk5ODk2NTQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.NFK56pyjWFxtFy3V9whPLeRbZssXAu6l6ZV8yfHIOM03QQrkBnf6eIXCvX6RbShsd5-bPlNF-IrRL4S4mkJQaTDpFS3ZoJGhcms8rQGMkXSQwXfKhFC_HEj7tEoNE6mrHkfKbwFoMU1UUWAnyEF5IJgaZ9iB5EVwFaHEOBpsqV3vcyT7NV_XMwQsOwpuRAseeb_9N5VfSkiZxn0JQfHovZDVa15QYZNUftu3lJHnplwv9r59uZmLPcdA2t-fLuiQxYO5e_75Kt2NuKB299cwYojJzr7VA4xCC4ifK6fWBarU51DRcgRMv6IAuoeYioYQ2x4q0JAMeeiOc2YRclFIrw";
 
     private static CoreV1Api api;
     private static final String serviceName = "just-hello";
@@ -36,9 +35,9 @@ public class K8sSandbox {
         // Fetch the service metadata
         serviceMetadata(api);
 
-        podInfo(api);
+        V1PodList pods = podsOfService(serviceName, "default");
 
-        podsOfService(serviceName, "default");
+        podInfo(api, pods.getItems().get(0).getMetadata().getName());
     }
 
     private static @NotNull CoreV1Api initApiClient() throws IOException {
@@ -48,17 +47,18 @@ public class K8sSandbox {
 //        client.setAccessToken(setBearerToken("<YOUR_TOKEN>");
 //        client.setVerifyingSsl(false); // or load CA cert properly
 
-        ApiClient client = ClientBuilder.standard()
-                .setBasePath("https://127.0.0.1:6443")
-                .setAuthentication(new AccessTokenAuthentication(TOKEN))
-                .setVerifyingSsl(false)
-                .build();
+        ApiClient client = Config.fromConfig("/home/vk/.kube/config");
+//        ApiClient client = ClientBuilder.standard()
+//                .setBasePath("https://127.0.0.1:6443")
+//                .setAuthentication(new AccessTokenAuthentication(TOKEN))
+//                .setVerifyingSsl(false)
+//                .build();
 
         Configuration.setDefaultApiClient(client);
         return new CoreV1Api();
     }
 
-    private static void podsOfService(String serviceName, String namespace) throws ApiException {
+    private static V1PodList podsOfService(String serviceName, String namespace) throws ApiException {
         // 1. Read the Service
         V1Service svc = api.readNamespacedService(serviceName, namespace).execute();
 
@@ -67,7 +67,7 @@ public class K8sSandbox {
 
         if (selector == null || selector.isEmpty()) {
             System.out.println("Service has no selector.");
-            return;
+            return null;
         }
 
         // 3. Convert selector map → label selector string
@@ -86,16 +86,23 @@ public class K8sSandbox {
                 System.out.println("Pod: " + p.getMetadata().getName()
                         + ", ip=" + p.getStatus().getPodIP())
         );
+
+        return pods;
     }
 
-    private static void podInfo(CoreV1Api api) throws ApiException {
-        V1Pod pod = api.readNamespacedPod("vk-cloud-hello-64655f54cf-4bsbn", "default").execute();
+    private static void podInfo(CoreV1Api api, String podName) throws ApiException {
+        System.out.println("fetching just-hello pod...");
+
+//        V1Pod pod = api.readNamespacedPod("just-hello-6f95f64bf5-l6bvz", "default").execute();
+        V1Pod pod = api.readNamespacedPod(podName, "default").execute();
         System.out.println(pod);
         System.out.println(pod.getSpec());
     }
 
     private static void serviceMetadata(CoreV1Api api) throws ApiException {
-        V1Service service = api.readNamespacedService("k8s-hello-service", "default").execute();
+        System.out.println("fetching just-hello service...");
+
+        V1Service service = api.readNamespacedService(serviceName, "default").execute();
 
         // Print out labels and annotations
         V1ObjectMeta metadata = service.getMetadata();

@@ -21,6 +21,9 @@ include 'eurekaSpace:eu-main'
 include 'eurekaSpace:eu-translate'
 
 include 'k8sSpace:k8sSandbox'
+include 'k8sSpace:fabric8Sandbox'
+include 'k8sSpace:k8s-main'
+include 'k8sSpace:k8s-translate'
 
 include 'zookeeperSpace:hazelcastZkSpi'
 include 'zookeeperSpace:sandbox'

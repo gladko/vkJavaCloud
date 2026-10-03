@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: k8s-main
+server:
+  port: 8080
+
+translate-service-address: http://localhost:8081
