@@ -1,13 +1,23 @@
 plugins {
     id 'org.springframework.boot'
+//    id 'com.google.protobuf' version '0.9.5'
 }
 
 containerPorts = ["18000:18000"]
 
 
 dependencies {
+    implementation project(":k8sSpace:api")
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE'
+//    implementation 'net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE'
+    runtimeOnly "io.grpc:grpc-protobuf:${grpcVersion}"
+//    implementation "io.grpc:grpc-stub:${grpcVersion}"
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+

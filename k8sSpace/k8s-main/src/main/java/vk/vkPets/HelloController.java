@@ -20,17 +20,21 @@ public class HelloController {
     private final Map<String, Integer> results = new ConcurrentHashMap<>();
     private final AtomicInteger requestCounter = new AtomicInteger();
     private final AtomicBoolean logRequestResults = new AtomicBoolean();
-    private final RestClient client;
+
     private String translateServiceAddress;
     @Value("${spring.application.name}")
     private String spaceName;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
+    private final RestClient restClient;
+    private final GreetingsService grpsClient;
 
-    public HelloController(RestClient client,
+    public HelloController(RestClient restClient, GreetingsService grpsClient,
             @Value("${translate-service-address}") String translateServiceAddress)
     {
-        this.client = client;
+        this.restClient = restClient;
+        this.grpsClient = grpsClient;
+
         this.translateServiceAddress = translateServiceAddress;
         executorService.scheduleAtFixedRate(() -> {
             System.out.println(new Date() + ": " + results);
@@ -43,14 +47,15 @@ public class HelloController {
         return "Greetings from " + spaceName + " space main app!" +
                 "<br>Try the following endpoints:" +
                 "<br>  /testCall" +
-                "<br>  /go";
+                "<br>  /go" +
+                "<br>  /helloGrps?name=Ivan";
     }
 
     @GetMapping("/testCall")
     public String testCall() {
 //        System.out.println("on testCall");
 //        return restTemplate.getForObject(translateServiceAddress + "/ping", String.class);
-        return client.get()
+        return restClient.get()
                 .uri(translateServiceAddress + "/ping")
                 .retrieve()
                 .body(String.class);
@@ -78,5 +83,10 @@ public class HelloController {
         }, 10, 10, TimeUnit.MILLISECONDS);
 
         return "ok";
+    }
+
+    @GetMapping("/helloGrps")
+    public String helloGrps(@RequestParam String name) {
+        return grpsClient.sayHello(name);
     }
 }

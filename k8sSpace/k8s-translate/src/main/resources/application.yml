@@ -3,3 +3,7 @@ spring:
     name: k8s-translate
 server:
   port: 8081
+
+grpc:
+  server:
+  port: 9090

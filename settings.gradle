@@ -20,6 +20,7 @@ include 'eurekaSpace:sandbox'
 include 'eurekaSpace:eu-main'
 include 'eurekaSpace:eu-translate'
 
+include 'k8sSpace:api'
 include 'k8sSpace:k8sSandbox'
 include 'k8sSpace:fabric8Sandbox'
 include 'k8sSpace:k8s-main'
@@ -33,6 +34,9 @@ include 'zookeeperSpace:zk-translate'
 include 'spring-config:config-server'
 include 'spring-config:client'
 
-include 'spring-k8s:discoveryserver'
-include 'spring-k8s:spring-k8s-main'
-include 'spring-k8s:spring-k8s-translate'
+//include 'spring-k8s:discoveryserver'
+//include 'spring-k8s:spring-k8s-main'
+//include 'spring-k8s:spring-k8s-translate'
+
+//findProject(':k8sSpace:api')?.name = 'api'
+

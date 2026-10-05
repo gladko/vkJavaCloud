@@ -41,6 +41,25 @@ docker push localhost:5000/just-hello:latest
 kubectl rollout restart deployment my-app
 kubectl rollout status deployment my-app
 
+## scale
+kubectl scale deployment k8s-translate --replicas=10
+
+## logs
+kubectl logs -f deployment/k8s-main
+
 ## Client examples
 See com.hazelcast.kubernetes.KubernetesClient
 and com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy
+
+
+# Grps
+```bash
+# only generates code
+./gradlew k8sSpace:api:generateProto
+
+# build and check
+./gradlew k8sSpace:api:jar
+jar tf k8sSpace/api/build/libs/*.jar | grep GreetingServiceGrpc
+
+curl "http://localhost:8080/helloGrps?name=Ivan"
+```

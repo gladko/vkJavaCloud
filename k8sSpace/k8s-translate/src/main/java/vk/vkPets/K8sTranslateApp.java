@@ -43,8 +43,9 @@ public class K8sTranslateApp {
 
     @GetMapping("/ping")
     public String ping() throws UnknownHostException {
-        System.out.println("requested ping, instance : " + INSTANCE_UUID);
-        return "Pong from " + HOST_NAME + ", uuid: " + INSTANCE_UUID;
+        System.out.println("requested ping, instance : " + HOST_NAME);
+        return "Pong from " + HOST_NAME;
+//                + ", uuid: " + INSTANCE_UUID;
     }
 
     @RequestMapping("/prop")
