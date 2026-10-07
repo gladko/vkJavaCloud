@@ -63,3 +63,31 @@ jar tf k8sSpace/api/build/libs/*.jar | grep GreetingServiceGrpc
 
 curl "http://localhost:8080/helloGrps?name=Ivan"
 ```
+
+
+# resolving k3s API endpoint
+```bash
+# 1. URL - exec and look for clusters.cluster.server field. Expected https://127.0.0.1:6443
+kubectl config view --minify
+
+# 2. AUTH  
+# Extract your personal admin token directly from your .kube/config file using
+kubectl config view --minify --raw -o jsonpath='{.users[0].user.token}'
+# If that command returns blank because K3s is using client certificates instead of tokens, you can generate a temporary development token by
+kubectl create clusterrolebinding default-admin-binding --clusterrole=cluster-admin --serviceaccount=default:default 2>/dev/null 
+kubectl create token default
+#or
+kubectl -n kubernetes-dashboard create token admin-user --duration=24h
+
+#3. test
+curl -k -H "Authorization: Bearer $K3S_TOKEN" -H "Accept: application/json" -X GET \
+     "$K3S_URL/apis/stable.example.com/v1"     
+     
+curl -k -H "Authorization: Bearer $K3S_TOKEN" -H "Accept: application/json" -X GET \
+     "$K3S_URL/apis/stable.example.com/v1/namespaces/default/crontabs/nightly-backup-cron"
+```
+
+$K3S_URL / apis / stable.example.com / v1 / namespaces / default / crontabs / <RESOURCE_INSTANCE_NAME>
+└──┬──┘          └───────┬────────┘   └┬┘             └────┬───┘   └───┬────┘
+Cluster API            API Group    Version            Namespace    Resource Plural
+(from K3s config)     (from your CRD)  (v1)             (default)    (from your CRD)

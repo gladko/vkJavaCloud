@@ -39,4 +39,6 @@ include 'spring-config:client'
 //include 'spring-k8s:spring-k8s-translate'
 
 //findProject(':k8sSpace:api')?.name = 'api'
+include 'k8sSpace:rawHttpSandbox'
+findProject(':k8sSpace:rawHttpSandbox')?.name = 'rawHttpSandbox'
 
