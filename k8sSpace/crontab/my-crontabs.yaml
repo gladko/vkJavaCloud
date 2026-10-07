@@ -1,0 +1,25 @@
+apiVersion: "stable.example.com/v1"
+kind: CronTab
+metadata:
+  name: nightly-backup-cron
+spec:
+  cronStmt: "0 2 * * *"
+  iconPath: my-awesome-nightly-backup-icon.jpeg
+
+---
+apiVersion: "stable.example.com/v1"
+kind: CronTab
+metadata:
+  name: hourly-cleanup-cron
+spec:
+  cronStmt: "0 * * * *"
+  iconPath: my-awesome-hourly-cleanup-icon.jpeg
+
+---
+apiVersion: "stable.example.com/v1"
+kind: CronTab
+metadata:
+  name: weekly-report-cron
+spec:
+  cronStmt: "0 0 * * 0"
+  iconPath: my-awesome-weekly-report-icon.jpeg

@@ -1,6 +1,7 @@
 
 dependencies {
     api "io.kubernetes:client-java:26.0.0"
+//    api "io.kubernetes:client-java-extended:26.0.0"
 //    implementation "com.fasterxml.jackson.core:jackson-databind:2.18.4"
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
