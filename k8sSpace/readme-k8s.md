@@ -91,3 +91,9 @@ $K3S_URL / apis / stable.example.com / v1 / namespaces / default / crontabs / <R
 └──┬──┘          └───────┬────────┘   └┬┘             └────┬───┘   └───┬────┘
 Cluster API            API Group    Version            Namespace    Resource Plural
 (from K3s config)     (from your CRD)  (v1)             (default)    (from your CRD)
+
+../gradlew :k8sSpace:k8s-main:importImageToK3s
+kubectl apply -f k8s-main
+kubectl get svc k8s-main
+curl http://172.17.244.18:31591/testDiscoveryWatcher
+kubectl logs -f deployment/k8s-main

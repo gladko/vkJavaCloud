@@ -21,6 +21,8 @@ spec:
           env:
             - name: TRANSLATE-SERVICE-ADDRESS
               value: http://k8s-translate:8080
+            - name: GRPC_CLIENT_GREETING_ADDRESS
+              value: static://k8s-translate:9090
 ---
 apiVersion: v1
 kind: Service

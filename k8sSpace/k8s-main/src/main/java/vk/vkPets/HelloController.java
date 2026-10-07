@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import vk.vkPets.discovery.InClusterServiceDiscovery;
+import vk.vkPets.discovery.K8sServiceDiscoveryWatcher;
 
 import java.util.Date;
 import java.util.Map;
@@ -47,6 +49,7 @@ public class HelloController {
         return "Greetings from " + spaceName + " space main app!" +
                 "<br>Try the following endpoints:" +
                 "<br>  /testCall" +
+                "<br>  /testDiscoveryWatcher" +
                 "<br>  /go" +
                 "<br>  /helloGrps?name=Ivan";
     }
@@ -88,5 +91,19 @@ public class HelloController {
     @GetMapping("/helloGrps")
     public String helloGrps(@RequestParam String name) {
         return grpsClient.sayHello(name);
+    }
+
+    @GetMapping("/testDiscoveryWatcher")
+    public String testDiscoveryWatcher(@RequestParam String k8sUrl) {
+        new Thread(() -> {
+            try {
+                String[] args = (k8sUrl == null || k8sUrl.isBlank()) ? new String[] {} : new String[] {k8sUrl};
+                InClusterServiceDiscovery.main(args);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                e.printStackTrace();
+            }
+        }).start();
+        return "ok";
     }
 }

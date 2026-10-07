@@ -1,4 +1,4 @@
-package vk.vkPets.endpoints;
+package vk.vkPets.discovery;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

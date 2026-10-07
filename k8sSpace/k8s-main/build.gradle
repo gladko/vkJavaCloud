@@ -8,6 +8,7 @@ containerPorts = ["8080:8080"]
 
 dependencies {
     implementation project(":k8sSpace:api")
+    implementation project(":k8sSpace:rawHttpSandbox")
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE"

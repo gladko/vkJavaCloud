@@ -21,6 +21,8 @@ spec:
           env:
             - name: SERVER_PORT
               value: "8080"
+            - name: GRPC_SERVER_PORT
+              value: "9090"
 ---
 apiVersion: v1
 kind: Service
@@ -30,5 +32,9 @@ spec:
   selector:
     app: k8s-translate
   ports:
-    - port: 8080
+    - name: http
+      port: 8080
       targetPort: 8080
+    - name: grps
+      port: 9090
+      targetPort: 9090
