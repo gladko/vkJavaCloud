@@ -3,6 +3,7 @@ package vk.vkPets.fabric8;
 public class CronTabSpec {
     private String cronStmt;
     private String iconPath;
+    private Integer replicas;
 
     public String getCronStmt() {
         return cronStmt;
@@ -18,5 +19,13 @@ public class CronTabSpec {
 
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
+    }
+
+    public Integer getReplicas() {
+        return replicas;
+    }
+
+    public void setReplicas(Integer replicas) {
+        this.replicas = replicas;
     }
 }

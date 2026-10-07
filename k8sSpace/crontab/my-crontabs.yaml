@@ -5,6 +5,7 @@ metadata:
 spec:
   cronStmt: "0 2 * * *"
   iconPath: my-awesome-nightly-backup-icon.jpeg
+  replicas: 3
 
 ---
 apiVersion: "stable.example.com/v1"
