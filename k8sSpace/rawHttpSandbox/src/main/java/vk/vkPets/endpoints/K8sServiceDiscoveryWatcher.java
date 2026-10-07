@@ -12,7 +12,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,10 +100,13 @@ public class K8sServiceDiscoveryWatcher {
      * Extracts live networking topology changes from the stream payload.
      */
     private static void processDiscoveryEvent(K8sEndpointEvent event) {
-        String serviceName = event.getObject().getMetadata().getName();
-        String eventType = event.getType();
+        // 🛡️ Safe check if k8s sends an unmapped metadata block
+        if (event.object() == null || event.object().metadata() == null) return;
 
-        // Skip default cluster internal endpoints to keep console logs relevant
+        String serviceName = event.object().metadata().name();
+        String eventType = event.type();
+
+        // Skip default cluster internal endpoints to keep logs clean
         if ("kubernetes".equals(serviceName)) {
             System.out.println("ignored internal endpoints");
             return;
@@ -112,29 +114,28 @@ public class K8sServiceDiscoveryWatcher {
 
         System.out.printf("[%s] Service Discovery Event for: '%s'%n", eventType, serviceName);
 
-        if ("DELETED".equals(eventType) || event.getObject().getSubsets() == null) {
+        if ("DELETED".equals(eventType) || event.object().subsets() == null) {
             System.out.printf("   ❌ Service '%s' went offline completely.%n", serviceName);
             return;
         }
 
-        // Collect all available backend targets
-        List<String> liveIps = new ArrayList<>();
-        List<Integer> livePorts = new ArrayList<>();
+        List<String> liveIps = new java.util.ArrayList<>();
+        List<Integer> livePorts = new java.util.ArrayList<>();
 
-        for (K8sEndpointEvent.SubSet subset : event.getObject().getSubsets()) {
-            if (subset.getAddresses() != null) {
-                for (K8sEndpointEvent.Address addr : subset.getAddresses()) {
-                    liveIps.add(addr.getIp());
+        // Map properties cleanly using record components
+        for (K8sEndpointEvent.SubSet subset : event.object().subsets()) {
+            if (subset.addresses() != null) {
+                for (K8sEndpointEvent.Address addr : subset.addresses()) {
+                    liveIps.add(addr.ip());
                 }
             }
-            if (subset.getPorts() != null) {
-                for (K8sEndpointEvent.Port port : subset.getPorts()) {
-                    livePorts.add(port.getPort());
+            if (subset.ports() != null) {
+                for (K8sEndpointEvent.Port port : subset.ports()) {
+                    livePorts.add(port.port());
                 }
             }
         }
 
-        // Output current targets available for traffic load-balancing
         if (!liveIps.isEmpty()) {
             System.out.println("   🟢 Available Backend Targets (IP addresses):");
             for (String ip : liveIps) {
@@ -146,4 +147,5 @@ public class K8sServiceDiscoveryWatcher {
             System.out.println("   ⚠ No Pods are healthy/ready to receive traffic for this service.");
         }
     }
+
 }
