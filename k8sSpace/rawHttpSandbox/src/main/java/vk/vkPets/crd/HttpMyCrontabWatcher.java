@@ -1,10 +1,12 @@
-package vk.vkPets;
+package vk.vkPets.crd;
 
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import vk.vkPets.Util;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,9 +22,9 @@ public class HttpMyCrontabWatcher {
     public static void main(String[] args) throws Exception {
         // Appending ?watch=true turns the endpoint into a continuous server-sent streaming pipeline
         String targetUrl = HttpMyCrontabReader.K8S_SERVER + HttpMyCrontabReader.API_CRONTABS + "?watch=true";
-        String token = AuthTokenProvider.getToken();
+        String token = Util.getToken();
 
-        HttpClient client = HttpMyCrontabReader.createHttpClient();
+        HttpClient client = Util.createHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(targetUrl))

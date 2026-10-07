@@ -1,4 +1,4 @@
-package vk.vkPets;
+package vk.vkPets.crd;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

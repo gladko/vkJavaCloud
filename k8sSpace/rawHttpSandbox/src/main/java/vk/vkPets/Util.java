@@ -1,6 +1,14 @@
 package vk.vkPets;
 
-public class AuthTokenProvider {
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.net.http.HttpClient;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+public class Util {
 //    kubectl -n kubernetes-dashboard create token admin-user --duration=24h
     private final static String testToken1 = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjUzYmpXMW9nbmZPUVRYRE04ZUlna2FTSnYyQUxBeVpUeGpOMzhSVjBXeWsifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzkxNDU4NzgzLCJpYXQiOjE3OTEzNzIzODMsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiNjk1Mzc0MjgtZDg3NS00YzZmLWFlZTgtZmVlOWUyMmZhZTU2Iiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMTgyNDY3ZjktMDc4ZS00NjkzLTg4ODEtZDYzYWI3MjA0MTk5In19LCJuYmYiOjE3OTEzNzIzODMsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.I_CtsxKI8H_mBNdHHUfo8Rst-Ie0eSLvqS7pu8Bb7KiyYFiOIsklogACGd798tw2YfIj1sNJ5SQSKxKz7e4OBzYOyGvVU_wBe8EdNa0nGb1mVnsxkQoTzC25lcjSAajWFiyl9Xo2NYHzw0_Q9CNF4rmTYb8xMMVYjg509cmNsvarQeXS8OlTDVzSMEZgZG1DxDUXspAtrsgtySQDTTpayPGUvfjSdbh3M4M3cwvIMaMLcO6TCoLmaxxSQxz2GIjMrDtYCUqFU-xRK0o2ofB9wehRZtlK16DYi0zKtQC1-nfG1dujXchQgqdWm9ce1BfUR3kcONiG8j7cgRQoybdA4w";
 
@@ -10,7 +18,25 @@ public class AuthTokenProvider {
     private final static String testToken2 = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjUzYmpXMW9nbmZPUVRYRE04ZUlna2FTSnYyQUxBeVpUeGpOMzhSVjBXeWsifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzkxMzcyMTk1LCJpYXQiOjE3OTEzNjg1OTUsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiODFlNjJjZjYtYTMyZS00ZjQxLThkMjAtMjk3Mzg1ODAyMDZhIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImRlZmF1bHQiLCJ1aWQiOiIxNzI5YjkzMS0wNTA0LTQ2NjYtOGUzNy0xNDc4Y2RmMzM2NzYifX0sIm5iZiI6MTc5MTM2ODU5NSwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6ZGVmYXVsdCJ9.FlwbMEVdpVmRA2GdX254iS4esNDCvrp8t9r-cjtY1PYJCP4AEhuCFtbZ0hcB-YzbBHeAehWlwRVymppE0gTe6ZiuqxQSBTV3qKsAQ-5JRaF7GroEboaS-rCti20uqmfirzn75yo5dUOzEJwYlly_G6Yntg5xlicuNfccA_vEI4b0xfjCY-9e3vxJaQjV7NGJPh5gKjEQ_9GsrI-eZfhq0ePIK5sVSK5sV8wsCiwowIx4II8y1fgLyguqsyRu70HIHdpHCz2baz4PP-l62L_U90XOql2uRHhJ4C8OVzUgxZbU0tYjaCEWSU1wZVe4GQpqgUc_KTD6CxpWapixKl9S8g";
 
 
-    static String getToken() {
+    public static String getToken() {
         return testToken1;
+    }
+
+    public static HttpClient createHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
+        // Omit SSL validation for local K3s self-signed certificates
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+                }
+        };
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, trustAllCerts, new SecureRandom());
+
+        return HttpClient.newBuilder()
+                .sslContext(sslContext)
+                .build();
     }
 }
