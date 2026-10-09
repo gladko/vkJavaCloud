@@ -12,10 +12,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    //     gRPS
+    // It's NOT official spring gRPS starter. It's community-maintained plugin.
+    // TODO: migrate to spring-grpc-spring-boot-starter
+//    https://marconak-matej.medium.com/mms-boot-notes-grpc-with-spring-boot-b2f8519aa5ea
     implementation 'net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE'
-//    implementation 'net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE'
+//    implementation 'org.springframework.grpc:spring-grpc-spring-boot-starter'
+
     runtimeOnly "io.grpc:grpc-protobuf:${grpcVersion}"
-//    implementation "io.grpc:grpc-stub:${grpcVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

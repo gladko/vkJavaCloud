@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 public class K8sTranslateApp {
     private static final String INSTANCE_UUID = UUID.randomUUID().toString();
-    private static String HOST_NAME;
+    static String HOST_NAME;
 
 
     public static void main(String[] args) throws UnknownHostException {

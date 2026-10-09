@@ -6,14 +6,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import vk.vkPets.discovery.InClusterServiceDiscovery;
-import vk.vkPets.discovery.K8sServiceDiscoveryWatcher;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,15 +19,15 @@ public class HelloController {
     private final AtomicInteger requestCounter = new AtomicInteger();
     private final AtomicBoolean logRequestResults = new AtomicBoolean();
 
-    private String translateServiceAddress;
     @Value("${spring.application.name}")
-    private String spaceName;
+    private String appName;
+    private final String translateServiceAddress;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private final RestClient restClient;
-    private final GreetingsService grpsClient;
+    private final SpringGrpsClient grpsClient;
 
-    public HelloController(RestClient restClient, GreetingsService grpsClient,
+    public HelloController(RestClient restClient, SpringGrpsClient grpsClient,
             @Value("${translate-service-address}") String translateServiceAddress)
     {
         this.restClient = restClient;
@@ -46,16 +42,17 @@ public class HelloController {
 
     @GetMapping("/")
     public String index() {
-        return "Greetings from " + spaceName + " space main app!" +
-                "<br>Try the following endpoints:" +
-                "<br>  /testCall" +
-                "<br>  /testDiscoveryWatcher" +
-                "<br>  /go" +
-                "<br>  /helloGrps?name=Ivan";
+        return "Greetings from " + appName + " "
+                + "<br>Try the following endpoints:"
+                + "<br>  /testHttpCall"
+                + "<br>  /testGrpsCall"
+                + "<br>  /goHttp"
+                + "<br>  /goGrps"
+                + "<br>  /testDiscoveryWatcher";
     }
 
-    @GetMapping("/testCall")
-    public String testCall() {
+    @GetMapping("/testHttpCall")
+    public String testHttpCall() {
 //        System.out.println("on testCall");
 //        return restTemplate.getForObject(translateServiceAddress + "/ping", String.class);
         return restClient.get()
@@ -64,17 +61,31 @@ public class HelloController {
                 .body(String.class);
     }
 
+    @GetMapping("/testGrpsCall")
+    public String testGrpsCall() {
+        return grpsClient.sayHello("test");
+    }
+
     @GetMapping("/log")
     public String log(@RequestParam(defaultValue = "false") boolean enabled) {
         logRequestResults.set(enabled);
         return "ok";
     }
 
-    @GetMapping("/go")
-    public String go() {
+    @GetMapping("/goHttp")
+    public String goHttp() {
+        return goImpl(this::testHttpCall);
+    }
+
+    @GetMapping("/goGrps")
+    public String goGrps() {
+        return goImpl(this::testGrpsCall);
+    }
+
+    private String goImpl(Callable<String> action) {
         executorService.scheduleAtFixedRate(() -> {
             try {
-                String result = testCall();
+                String result = action.call();
                 results.merge(result, 1, Integer::sum);
 
                 if (logRequestResults.get() && requestCounter.incrementAndGet() % 13 == 0) {
@@ -86,11 +97,6 @@ public class HelloController {
         }, 10, 10, TimeUnit.MILLISECONDS);
 
         return "ok";
-    }
-
-    @GetMapping("/helloGrps")
-    public String helloGrps(@RequestParam String name) {
-        return grpsClient.sayHello(name);
     }
 
     @GetMapping("/testDiscoveryWatcher")
@@ -105,5 +111,9 @@ public class HelloController {
             }
         }).start();
         return "ok";
+    }
+
+    public void goKafka() {
+        throw new UnsupportedOperationException();
     }
 }

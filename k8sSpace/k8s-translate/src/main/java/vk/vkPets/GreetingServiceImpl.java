@@ -14,7 +14,7 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
     public void sayHello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
         System.out.println("sayHello");
         HelloResponse response = HelloResponse.newBuilder()
-                .setMessage("Hello " + request.getName())
+                .setMessage("Hello " + request.getName() + "from " + K8sTranslateApp.HOST_NAME)
                 .build();
 
         responseObserver.onNext(response);
